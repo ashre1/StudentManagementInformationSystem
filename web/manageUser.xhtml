@@ -1,0 +1,167 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:head>
+        <style>
+
+            body{
+
+                //background-color: purple;
+                background-image: url("resources/images/background.png");
+                background-size: cover;
+                background-repeat: no-repeat;
+                //     overflow: hidden;
+                padding: 0px;
+            }
+
+            .ui-panelgrid td, .ui-panelgrid tr{
+                border-style: none !important
+            }
+
+            .Banner{
+
+                //background-color: purple;
+                background-image: url("resources/images/ndf1.gif");
+                background-size: cover;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+
+        </style>
+
+    </h:head>
+
+    <h:body>
+
+        <h:form  id="form" enctype="multipart/form-data">  
+
+            <p:growl id="messages" for="growl" life="3000"/> 
+
+            <p:dialog id="dialog1" header="Confirmation" widgetVar="confirm" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="1" cellpadding="5" id="grida1" style="text-align: center;">
+                    <p:outputLabel value="Are you Sure"/>
+                    <p:separator />
+                    <f:facet name="footer" id="foot">
+                        <p:commandButton value="Yes" action="#{loginBeans.logout}" update="grida1" process="grida1" icon="ui-icon-check"/>
+                        <p:spacer width="25"/>
+                        <p:commandButton value="No"  icon="ui-icon-close" onclick="PF('confirm').hide();"/>
+                    </f:facet>
+                </h:panelGrid>
+            </p:dialog>
+            
+            <p:dialog id="dialog2" header="Conirrmation" widgetVar="delete" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="1" cellpadding="5" id="grida2" style="text-align: center;">
+                    <p:outputLabel value="Are you Sure"/>
+                    <p:separator />
+                    <f:facet name="footer" id="foot">
+                        <p:commandButton value="Yes" action="#{userBean.delete}" update="form" icon="ui-icon-check"/>
+                        <p:spacer width="25"/>
+                        <p:commandButton value="No"  icon="ui-icon-close" onclick="PF('delete').hide();"/>
+                    </f:facet>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:dialog header="Update Info" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" style="margin:0 auto;">
+                <p:outputPanel id="carDetail">
+                    <h:panelGrid columns="2" rendered="#{not empty userBean.table}" columnClasses="lable,value" id="grida" cellpadding="3">
+
+                        <p:outputLabel value="UserName:"/>
+                        <p:inputText value="#{userBean.table.userName}" disabled="true"/>
+
+                        <p:outputLabel value="Full Name:"/>
+                        <p:inputText value="#{userBean.table.name}" required="true" requiredMessage="Full Name missing"/>
+
+                        <p:outputLabel for="usertype" value="UserType:" />
+                        <p:selectOneMenu id="usertype" value="#{userBean.table.userType}" effect="fold" style="width:185px;" >
+                            <f:selectItem itemLabel="Select One" itemValue="" />
+                            <f:selectItem itemLabel="Admin" itemValue="Admin" />
+                            <f:selectItem itemLabel="User" itemValue="User" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Change Image:"/>
+                        <p:selectOneRadio value="#{userBean.radioStatus}" required="true">
+                            <f:selectItem itemLabel="Yes" itemValue="Yes"/>
+                            <f:selectItem itemLabel="No" itemValue="No"/>
+                            <f:ajax render="image"/>
+                            <p:ajax process="@this" event="change" update=":form:grida"/>
+                        </p:selectOneRadio>
+
+                        <p:outputLabel value="Select Image: *" rendered="#{userBean.radioStatus=='Yes'}"/>
+                        <p:fileUpload value="#{userBean.file}" mode="simple" sizeLimit="9000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                      required="true" requiredMessage="Image missing" multiple="true" rendered="#{userBean.radioStatus=='Yes'}" style="width: 200px;"/>
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Change" ajax="false"  update=":form:image" process="@this"
+                                             actionListener="#{userBean.upload}" icon="ui-icon-arrowrefresh-1-w" oncomplete="handleLoginRequest(xhr, status, args)"
+                                             onerror="carDialog.show()" style="float: right;">
+                                <f:param name="id" value="#{userBean.table.imageID}"/>
+                            </p:commandButton> 
+                        </f:facet>   
+
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+
+            <p:panelGrid columns="1" style="width: 900px; margin: 0 auto;">
+                <p:panel styleClass="Banner" style=" height:100px;">
+
+                </p:panel>
+
+                <p:toolbar style="padding-right: 0px;">
+                    <f:facet name="right">
+                        <p:outputLabel value="User Profile"/> 
+                        <p:spacer width="250" height="20"/>
+                        <p:splitButton  value="Menu">
+                            <p:menuitem value="Home Page"  icon="ui-icon-extlink" outcome="adminPanel"/>
+                            <p:separator />
+                            <p:menuitem value="Add User"  icon="ui-icon-document" outcome="addUser"/>
+                            <p:menuitem value="Manage User"  icon="ui-icon-pencil" outcome="manageUser"/>
+                            <p:menuitem value="User Log"  icon="ui-icon-folder-open" outcome="userLog"/>
+                            <p:menuitem value="Change Image" icon="ui-icon-arrowrefresh-1-w" outcome="imageupload"/>
+                            <p:menuitem value="Student Info" icon="ui-icon-search" outcome="Individual"/>
+                            <p:separator />
+                            <p:menuitem value="Logout" icon="ui-icon-close" onclick="PF('confirm').show();"/>
+                        </p:splitButton>
+                    </f:facet>
+                </p:toolbar>
+                <p:dataGrid var="image" value="#{userBean.allImage}" columns="3" id="image" style="padding-top: 0px;">
+
+                    <f:facet name="footer">
+                        Click on icon to edit it
+                    </f:facet>
+
+                    <p:panel style="text-align:center;" header="#{image.name}">
+                        <h:panelGrid columns="1" style="width:100%; text-align: center;" width="100">
+                            <f:facet name="header">
+                                <h:graphicImage value="displayUser?image_id=#{image.imageID}" width="200" height="150"/>
+                            </f:facet>
+
+                            <h:outputLabel value="UserName: #{image.userName}"/>
+                            <h:outputLabel value="UserType: #{image.userType}"/>
+
+                            <p:panelGrid columns="2" style="margin: 0 auto;">
+                                <p:commandLink update=":form:carDetail" oncomplete="PF('carDialog').show()">
+                                    <p:graphicImage value="resources/images/edit.png" height="25"/>
+                                    <f:setPropertyActionListener value="#{image}" target="#{userBean.table}"/>
+                                </p:commandLink>
+                                
+                                 <p:commandLink update=":form:carDetail" onclick="PF('delete').show()">
+                                    <p:graphicImage value="resources/images/delete.png" height="20"/>
+                                    <f:setPropertyActionListener value="#{image}" target="#{userBean.table}"/>
+                                </p:commandLink>
+                                
+                                
+                            </p:panelGrid>
+                        </h:panelGrid>
+                    </p:panel>
+                </p:dataGrid>
+            </p:panelGrid>
+
+        </h:form>
+    </h:body>
+</html>

@@ -1,0 +1,137 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:head>
+        <style>
+            .Bimage .ui-layout-unit-content{
+
+                //background-color: purple;
+                background-image: url("resources/images/background.png");
+                // background-size: contain;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+
+
+            .Banner .ui-layout-unit-content{
+
+                //background-color: purple;
+                background-image: url("resources/images/ndf1.gif");
+                background-size: contain;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+        </style>
+
+    </h:head>
+    <h:body>
+
+        <h:form  id="form" enctype="multipart/form-data">  
+
+            <p:growl id="messages" for="growl" life="3000"/> 
+
+            <p:dialog id="dialog1" header="Confirmation" widgetVar="confirm" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="1" cellpadding="5" id="grida1" style="text-align: center;">
+                    <p:outputLabel value="Are you Sure"/>
+                    <p:separator />
+                    <f:facet name="footer" id="foot">
+                        <p:commandButton value="Yes" action="#{loginBeans.logout}" icon="ui-icon-check" update="grida1" process="grida1"/>
+                        <p:spacer width="25"/>
+                        <p:commandButton value="No"  icon="ui-icon-close" onclick="PF('confirm').hide();"/>
+                    </f:facet>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:layout fullPage="true">
+                <p:layoutUnit id="left" position="west"  size="225" style="border: 0px; padding: 0px;" styleClass="Bimage"/>
+
+                <p:layoutUnit id="right" position="east" size="225" resizable="false" style="border: none; padding: 0px" styleClass="Bimage"/>
+
+                <p:layoutUnit id="center" position="center" style="padding-top: 10px; border: none">
+
+                    <p:layout>
+                        <p:layoutUnit position="north" size="100" style="padding: 0px; border: none;" styleClass="Banner"/>
+
+                        <p:layoutUnit id="in_center" position="center" size="470" style="padding-top: 0px; border: none; padding-left: 0px; padding-right: 0px; text-align: center;">
+                            <p:toolbar style="padding-right: 0px;">
+                                <f:facet name="right">
+                                    <p:outputLabel value="Add User"/> 
+                                    <p:spacer width="250" height="20"/>
+                                    <p:splitButton  value="Menu">
+                                        <p:menuitem value="Home Page"  icon="ui-icon-extlink" outcome="adminPanel"/>
+                                        <p:separator />
+                                        <p:menuitem value="Add User"  icon="ui-icon-document" outcome="addUser"/>
+                                        <p:menuitem value="Manage User"  icon="ui-icon-pencil" outcome="manageUser"/>
+                                        <p:menuitem value="User Log"  icon="ui-icon-folder-open" outcome="userLog"/>
+                                        <p:menuitem value="Change Image" icon="ui-icon-arrowrefresh-1-w" outcome="imageupload"/>
+                                        <p:menuitem value="Student Info" icon="ui-icon-search" outcome="Individual"/>
+                                        <p:separator />
+                                        <p:menuitem value="Logout" icon="ui-icon-close" onclick="PF('confirm').show();"/>
+                                    </p:splitButton>
+                                </f:facet>
+                            </p:toolbar>
+                            <p:panel style="height: 470px;">
+                                <h:panelGrid columns="2"  style="padding-top: 0px;">
+
+                                    <p:panel style="border: none;">
+                                        <h:panelGrid columns="3" cellpadding="10" id="grida" style="text-align: left; padding-left: 20px; padding-top: 20px;" >
+
+                                            <p:outputLabel for="name" value="Full Name:"/>
+                                            <p:inputText id="name" value="#{addUser.name}" required="true" requiredMessage="Name is Missing"/>
+                                            <p:message for="name" />
+
+                                            <p:outputLabel for="userName" value="UserName:"/>
+                                            <p:inputText id="userName" value="#{addUser.userName}" required="true" requiredMessage="UserName is Missing">
+
+                                            </p:inputText>
+                                            <p:message for="userName" />
+
+                                            <p:outputLabel for="password" value="Password:"/>
+                                            <p:password id="password" value="#{addUser.password}" widgetVar="pass" required="true" requiredMessage="Password is Missing"/>
+                                            <p:message for="password" />
+
+                                            <p:outputLabel for="usertype" value="UserType:" />
+                                            <p:selectOneMenu id="usertype" value="#{addUser.userType}" effect="fold" style="width:203px;" required="true" requiredMessage="UserType is Missing">
+                                                <f:selectItem itemLabel="Select One" itemValue="" />
+                                                <f:selectItem itemLabel="Admin" itemValue="Admin" />
+                                                <f:selectItem itemLabel="User" itemValue="User" />
+                                            </p:selectOneMenu>
+                                            <p:message for="usertype" />
+
+                                            <p:outputLabel value="Select Image: *" />
+                                            <p:fileUpload value="#{addUser.file}" mode="simple" sizeLimit="9000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                                          required="true" requiredMessage="Image missing" multiple="true" style="width: 205px;"/>
+                                            <f:facet name="footer">
+                                                <p:commandButton value="Save" ajax="false"  update=":form" process="@this"
+                                                                 actionListener="#{addUser.upload}" icon="ui-icon-disk" style="float: right; right: 15px;">
+                                                </p:commandButton>
+                                            </f:facet>
+
+                                        </h:panelGrid>
+                                    </p:panel>
+
+                                    <p:panel style="border: none; padding-left: 50px;">
+
+                                        <h:graphicImage value="resources/images/add.png"/>
+
+                                    </p:panel>
+                                </h:panelGrid>
+                            </p:panel>
+
+                        </p:layoutUnit>
+                    </p:layout>
+                </p:layoutUnit>
+            </p:layout>
+
+
+        </h:form> 
+    </h:body>
+</html>
+

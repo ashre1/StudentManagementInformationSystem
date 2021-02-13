@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+    <h:head>
+        <style>
+
+            body{
+
+                //background-color: purple;
+                background-image: url("resources/images/background.png");
+                background-size: cover;
+                background-repeat: no-repeat;
+                //     overflow: hidden;
+                padding: 0px;
+            }
+
+            .ui-panelgrid td, .ui-panelgrid tr{
+                border-style: none !important
+            }
+
+            .Banner{
+
+                //background-color: purple;
+                background-image: url("resources/images/ndf1.gif");
+                background-size: cover;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+
+        </style>
+
+    </h:head>
+    <h:body>
+        <h:form enctype="multipart/form-data" id="form"> 
+
+            <p:growl showDetail="true" sticky="false" life="5000"/> 
+            <p:panelGrid columns="1" style="width: 900px; margin: 0 auto;">
+                <p:panel styleClass="Banner" style=" height:100px;">
+
+                </p:panel>
+
+                <p:panel style="margin: 0 auto;">
+                    <h:panelGrid columns="1" cellpadding="3" style="margin: 0 auto;">
+                        <h:graphicImage value="DisplayImage?id=#{getStudentData.table.ID}" width="200" height="200"></h:graphicImage>
+
+
+                        <f:facet name="footer">
+                            <p:commandButton update=":form:photoDetail" oncomplete="PF('photoDialog').show()" title="View Detail" value="Update" icon="ui-icon-arrowrefresh-1-w">
+                            </p:commandButton>
+                        </f:facet>
+                    </h:panelGrid>
+                </p:panel>
+
+                <p:panel header="A.Personal Details" id="stuDetails" widgetVar="pan">
+                    <h:panelGrid columns="5" cellpadding="3">
+                        <p:outputLabel value="Registration No.:"/>
+                        <p:inputText  id="regno" value="#{getStudentData.table.ID}" disabled="true"/>
+                        <p:spacer/>
+
+                        <h:outputText value="Program: " />  
+                        <p:selectOneMenu value="#{getStudentData.program}" id="program" disabled="true" style="width: 200px;">  
+                            <f:selectItem itemLabel="Select Program" itemValue="" />
+                            <f:selectItems value="#{getStudentData.categoryName}"/> 
+                        </p:selectOneMenu>
+
+
+                        <p:outputLabel  value="Batch"/>
+                        <p:inputText id="Batch" value="#{getStudentData.batch}" disabled="true"/>   
+                        <p:spacer/>
+
+                        <p:outputLabel  value="Year"/>
+                        <p:inputText value="#{getStudentData.year}" id="year" disabled="true"/> 
+
+
+                        <p:outputLabel  value="Section"/>
+                        <p:inputText id="section" value="#{getStudentData.section}" disabled="true"/>   
+                        <p:spacer/>
+
+                        <p:outputLabel  value="Current Semester"/>
+                        <p:inputText id="semester"  value="#{getStudentData.sem}" disabled="true"/>   
+
+
+                        <p:outputLabel  value="1.Name:" style="font-weight: bold;"/>
+                        <p:outputLabel /> 
+                        <p:outputLabel /> 
+                        <p:outputLabel /> 
+                        <p:outputLabel/>
+
+                        <p:outputLabel value="First Name:"/>
+                        <p:inputText  id="firstName" value="#{getStudentData.name}" disabled="true"/>
+                        <p:spacer/>
+
+                        <p:outputLabel value="Middle Name:"/>
+                        <p:inputText value="#{getStudentData.middlename}" disabled="true"/>
+
+
+                        <p:outputLabel value="Last Name:" id="lastName"/>
+                        <p:inputText value="#{getStudentData.lastName}" disabled="true"/>
+                        <p:outputLabel/>
+                        <p:outputLabel/>
+                        <p:outputLabel/>
+
+                        <p:outputLabel value="2.Gender"/>  
+                        <h:selectOneRadio id="gender" value="#{getStudentData.gender}" disabled="true"> 
+                            <f:selectItem itemValue="male" itemLabel="Male" />
+                            <f:selectItem itemValue="female" itemLabel="Female" />
+                        </h:selectOneRadio>
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel />
+
+                        <p:outputLabel value="3.Date of Birth" style="font-weight: bold;"/>
+                        <p:outputLabel/>
+                        <p:outputLabel/>
+                        <p:outputLabel/>
+                        <p:outputLabel/>
+
+                        <p:outputLabel for="mask" value="In A.D:" />
+                        <p:calendar  disabled="true" mask="true" id="mask" value="#{getStudentData.dateAd}" pattern="yyyy-MM-dd"/>
+                        <p:outputLabel/>
+                        <p:outputLabel/>
+                        <p:outputLabel/>
+
+
+                        <p:outputLabel  value="4.Nationality"/>
+                        <p:inputText disabled="true" id="nationality" value="#{getStudentData.nationality}" />
+                        <p:outputLabel/>
+                        <p:outputLabel  value="5.Religion"/>
+                        <p:inputText id="religion"  disabled="true" value="#{getStudentData.religion}"/>
+
+                        <p:outputLabel  value="6.Citizenship No:"/>
+                        <p:inputText id="citizen_no" disabled="true" value="#{getStudentData.citizenshipNO}" />           
+
+                        <p:outputLabel/>
+                        <p:outputLabel  value="7.Mobile No:"/>
+                        <p:inputText id="mob_no" disabled="true" value="#{getStudentData.mobno}"/> 
+
+                        <p:outputLabel  value="8.Email:"/>
+                        <p:inputText id="email" disabled="true" value="#{getStudentData.email}"/> 
+                        <p:spacer width="100" height="5"/>
+
+
+                        <f:facet name="footer">
+                            <p:commandButton update=":form:carDetail" oncomplete="PF('carDialog').show()" icon="ui-icon-arrowrefresh-1-w" title="View Detail" value="Update" style="float: right;">
+                            </p:commandButton>
+                        </f:facet>
+                    </h:panelGrid>
+
+                </p:panel>
+
+                <p:panel header="Address Details" id="address">
+
+                    <h:panelGrid columns="5" cellpadding="3">
+                        <p:outputLabel value="10.Permanent address" style="font-weight: bold;"/>
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel/>
+
+                        <h:outputText  value="a.House No."/>
+                        <p:inputText id="house_no" value="#{getStudentData.house_no}" disabled="true"/>
+                        <p:spacer/>
+
+                        <p:outputLabel  value="b.Street"/>
+                        <p:inputText id="street" value="#{getStudentData.street}" disabled="true"/>
+
+                        <h:outputText  value="c.VDC/Municipality."/>
+                        <p:inputText id="vdc" value="#{getStudentData.vdc}" disabled="true"/>
+                        <p:spacer/>
+
+                        <p:outputLabel  value="d.Ward No."/>
+                        <p:inputText id="wardno" value="#{getStudentData.wardno}" disabled="true"/>
+
+                        <h:outputText  value="e.District."/>
+                        <p:inputText id="district" value="#{getStudentData.district}" disabled="true"/>
+                        <p:spacer/>
+
+                        <p:outputLabel  value="f.Phone No."/>
+                        <p:inputText id="phone_no" value="#{getStudentData.contact}" disabled="true"/>
+
+                        <p:outputLabel value="11.Temporary address" style="font-weight: bold;"/>  
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel/>
+
+                        <h:outputText  value="a.House No."/>
+                        <p:inputText id="t_house_no"  value="#{getStudentData.t_house_no}" disabled="true"/>
+                        <p:spacer/>
+
+                        <p:outputLabel  value="b.Street"/>
+                        <p:inputText id="t_street"   value="#{getStudentData.t_street}" disabled="true"/>
+
+                        <h:outputText  value="c.VDC/Municipality."/>
+                        <p:inputText id="t_vdc"  value="#{getStudentData.t_vdc}" disabled="true"/>
+                        <p:spacer/>
+
+                        <p:outputLabel  value="d.Ward No."/>
+                        <p:inputText id="t_wardno"   value="#{getStudentData.t_wardno}" disabled="true"/>
+
+                        <h:outputText  value="e.District."/>
+                        <p:inputText id="t_district"  value="#{getStudentData.t_district}" disabled="true"/>
+                        <p:spacer width="100" height="5"/> 
+
+                        <p:outputLabel  value="f.Phone No."/>
+                        <p:inputText id="t_phone_no"   value="#{getStudentData.t_Contact}" disabled="true"/>
+                        <p:spacer width="100" height="5"/>
+
+                        <f:facet name="footer">
+                            <p:commandButton update=":form:addressDetail" icon="ui-icon-arrowrefresh-1-w" oncomplete="PF('addressDialog').show()" title="View Detail" value="Update" action="index" style="float: right;">
+
+                            </p:commandButton>
+                        </f:facet>
+                    </h:panelGrid>
+                </p:panel>
+
+
+
+                <p:panel header="Family Details" id="family">
+
+                    <h:panelGrid columns="5" cellpadding="3">
+
+                        <p:outputLabel value="12.Father's Details:" style="font-weight: bold;"/>  
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel/>
+
+                        <p:outputLabel  value="a.Name"/>
+                        <p:inputText id="f_name" value="#{getStudentData.f_name}" disabled="true"/>         
+                        <p:spacer/>
+
+                        <p:outputLabel  value="b.Occupation"/>
+                        <p:inputText id="f_occupation" value="#{getStudentData.f_occupation}" disabled="true"/>
+
+                        <p:outputLabel  value="c.Address"/>
+                        <p:inputText id="f_address"  value="#{getStudentData.f_address}" disabled="true"/>              
+                        <p:spacer/>
+
+                        <p:outputLabel  value="d.Phone No."/>
+                        <p:inputText id="f_phone_no"  value="#{getStudentData.f_phone_no}" disabled="true"/>              
+
+                        <p:outputLabel  value="e.Mobile No."/>
+                        <p:inputText id="f_mobil_no" value="#{getStudentData.f_mobilno}" disabled="true"/>              
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel/>
+
+                        <p:outputLabel value="13.Guardian's Details:" style="font-weight: bold;"/>  
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel/>
+
+                        <p:outputLabel  value="a.Name"/>
+                        <p:inputText id="g_name" value="#{getStudentData.g_name}" disabled="true"/>         
+                        <p:spacer/>
+
+                        <p:outputLabel  value="b.Occupation"/>
+                        <p:inputText id="g_occupation" value="#{getStudentData.g_occupation}" disabled="true"/>
+
+                        <p:outputLabel  value="c.Address"/>
+                        <p:inputText id="g_address" value="#{getStudentData.g_address}" disabled="true"/>              
+                        <p:spacer/>
+
+                        <p:outputLabel  value="d.Phone No."/>
+                        <p:inputText id="g_phone_no" value="#{getStudentData.g_phone_no}" disabled="true"/>              
+
+                        <p:outputLabel  value="e.Mobile No."/>
+                        <p:inputText id="g_mobil_no" value="#{getStudentData.g_mobilno}" disabled="true"/>
+                        <p:spacer width="100" height="5"/>
+
+                        <f:facet name="footer">
+                            <p:commandButton update=":form:familyDetail" icon="ui-icon-arrowrefresh-1-w" oncomplete="PF('familyDialog').show()" title="View Detail" value="Update " action="index" style="float: right;">
+
+                            </p:commandButton>
+                        </f:facet>
+                    </h:panelGrid>
+                </p:panel>
+
+                <p:panel header="Education Details" id="education">
+
+                    <h:panelGrid columns="5" cellpadding="3">
+
+                        <p:outputLabel value="1.Details of SLC or" style="font-weight: bold;"/>  
+                        <p:outputLabel value=" equivalent Exam:" style="font-weight: bold;"/>
+                        <p:outputLabel /> 
+                        <p:outputLabel />
+                        <p:outputLabel/>
+
+                        <p:outputLabel  value="a.Board"/>
+                        <p:inputText id="s_board" value="#{getStudentData.slcBoard}" disabled="true"/>         
+                        <p:spacer/>
+
+                        <p:outputLabel  value="b.School"/>
+                        <p:inputText id="s_school" value="#{getStudentData.slcSchool}" disabled="true"/>              
+
+                        <p:outputLabel  value="c.Passed Year in A.D"/>
+                        <p:inputText id="s_pass_year" disabled="true" value="#{getStudentData.slcPassedYear}"/>   
+                        <p:spacer/>
+
+                        <p:outputLabel  value="d.Passed Year in B.S"/>
+                        <p:inputText id="s_pass_yearnepali" disabled="true" value="#{getStudentData.slcPassedYearnep}"/>   
+
+                        <p:outputLabel  value="e.Passed Division"/>
+                        <p:inputText id="s_pass_division"  disabled="true" value="#{getStudentData.slcDivision}"/>
+                        <p:spacer/>
+
+                        <p:outputLabel  value="f.Symbol No."/>
+                        <p:inputText id="s_symbol_no" disabled="true" value="#{getStudentData.slcSymbol}"/>         
+
+                        <p:outputLabel  value="g.Percentage"/>
+                        <p:inputText id="s_percentage" disabled="true" value="#{getStudentData.slcPercentage}"/>
+                        <p:spacer/>
+
+                        <p:outputLabel  value="h.Grade:"/>
+                        <p:inputText id="grade" value="#{getStudentData.slcGrade}" disabled="true"/>         
+
+
+                        <p:outputLabel  value="i.Major Subjects."/>
+                        <p:inputText id="s_major_subjects" disabled="true" value="#{getStudentData.slcMajorSubject}"/>              
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel/>
+
+                        <p:outputLabel value="2.Details of PCL/+2" style="font-weight: bold;"/>  
+                        <p:outputLabel value="or eqivalent Exam:" style="font-weight: bold;"/>
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel/>
+
+                        <p:outputLabel  value="a.Board"/>
+                        <p:inputText id="h_board"  disabled="true" value="#{getStudentData.plus2Board}"/>         
+                        <p:spacer/>
+
+                        <p:outputLabel  value="b.PCL/+2/Others"/>
+                        <p:inputText id="h_choice"   disabled="true" value="#{getStudentData.plus2Others}"/>              
+
+                        <p:outputLabel  value="c.School/College"/>
+                        <p:inputText id="h_college"   disabled="true" value="#{getStudentData.plus2School}"/>              
+                        <p:spacer/>
+
+                        <p:outputLabel  value="d.Passed Year in A.D"/>
+                        <p:inputText id="h_pass_year"   disabled="true" value="#{getStudentData.plus2PassedYear}"/>   
+
+                        <p:outputLabel  value="e.Passed Year in B.S"/>
+                        <p:inputText id="h_pass_yearnepali"   disabled="true" value="#{getStudentData.plus2PassedYearnep}"/> 
+                        <p:spacer/>
+
+                        <p:outputLabel  value="f.Passed Division"/>
+                        <p:inputText id="h_pass_division"  disabled="true" value="#{getStudentData.plus2Division}"/>
+
+                        <p:outputLabel  value="g.TU/HSEB/Other Registration No."/>
+                        <p:inputText id="h_registration_no"  disabled="true" value="#{getStudentData.plus2Symbol}"/>         
+                        <p:spacer/>
+
+                        <p:outputLabel  value="h.Percentage"/>
+                        <p:inputText id="h_percentage"   disabled="true"  value="#{getStudentData.plus2Percentage}"/>
+
+                        <p:outputLabel  value="i.Major Subjects."/>
+                        <p:inputText id="h_major_subjects"   disabled="true" value="#{getStudentData.plus2MajorSubject}"/>              
+                        <p:outputLabel />
+                        <p:outputLabel/>
+                        <p:outputLabel />
+
+                        <p:outputLabel value="3.Number Scored" style="font-weight: bold;"/>
+                        <p:outputLabel value="in CMAT Exam:" style="font-weight: bold;"/>
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel/>
+
+                        <p:outputLabel  value="a.CMAT Roll No."/>
+                        <p:inputText id="c_roll_no"  disabled="true" value="#{getStudentData.cmatSymbol}"/>
+                        <p:spacer width="100" height="5"/>
+
+                        <p:outputLabel  value="b.CMAT Score"/>
+                        <p:inputText id="c_score"   disabled="true" value="#{getStudentData.cmatMarks}"/>
+                        <p:spacer width="100" height="5"/>
+
+                        <f:facet name="footer">
+                            <p:commandButton update=":form:educationDetail" icon="ui-icon-arrowrefresh-1-w" oncomplete="PF('educationDialog').show()" title="View Detail" value="Update" action="index" style="float: right;">
+
+                            </p:commandButton>
+                        </f:facet>
+
+                    </h:panelGrid>
+
+                </p:panel>
+
+                <p:panel header="Documents submitted" id="documents">
+
+                    <h:panelGrid columns="5" cellpadding="3">
+
+                        <p:outputLabel  value="SLC Transcript"/>
+                        <p:inputText id="slc_transcript" disabled="true" value="#{getStudentData.slcTranscript}"/>
+                        <p:spacer/>
+
+                        <p:outputLabel  value="SLC Charater Certificate"/>
+                        <p:inputText id="slc_character_certificate" disabled="true" value="#{getStudentData.slcCertificate}"/>
+
+                        <p:outputLabel  value="+2 Transcript"/>
+                        <p:inputText id="plus2_transcript" disabled="true" value="#{getStudentData.plus2Transcript}"/>
+                        <p:spacer/>
+
+                        <p:outputLabel value="+2 Character Certificate"/>
+                        <p:inputText id="plus2_character_certificate" disabled="true" value="#{getStudentData.plus2Certificate}"/>
+
+                        <p:outputLabel value="Citizenship Photocopy"/>
+                        <p:inputText id="citizenship_photocopy" disabled="true" value="#{getStudentData.citizenship}"/>
+                        <p:spacer width="100" height="5"/>
+
+                        <p:outputLabel value="Photo"/>
+                        <p:inputText id="photo" disabled="true" value="#{getStudentData.photo}"/>
+                        <p:spacer width="100" height="5"/>
+
+                        <f:facet name="footer">
+                            <p:commandButton update=":form:documentDetail" icon="ui-icon-arrowrefresh-1-w" oncomplete="PF('documentDialog').show()" title="View Detail" value="Update" action="index" style="float: right;">
+
+                            </p:commandButton>
+                        </f:facet>
+                    </h:panelGrid>
+
+                </p:panel>
+
+            </p:panelGrid>
+
+
+            <p:dialog header="Student Information" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="carDetail">
+                    <h:panelGrid  columns="4" cellpadding="3">
+                        <f:facet name="header">
+                            <p:panel style="text-align:center; border: none;">
+                                <h:graphicImage value="DisplayImage?id=#{getStudentData.table.ID}" width="50" height="50"></h:graphicImage>
+                                <br/>
+                                <p:outputLabel value="#{getStudentData.table.ID}"/>
+                            </p:panel>
+                        </f:facet>
+
+
+                        <p:outputLabel value="Registration No.:"/>
+                        <p:inputText  id="uregno" value="#{getStudentData.table.ID}"  disabled="true"/>
+
+
+                        <h:outputText value="Program: " />  
+                        <p:selectOneMenu value="#{getStudentData.program}" id="uprogram"  style="width: 200px;">  
+                            <f:selectItem itemLabel="Select Program" itemValue="" />
+                            <f:selectItems value="#{getStudentData.categoryName}"/> 
+                        </p:selectOneMenu>
+
+
+                        <p:outputLabel  value="Batch"/>
+                        <p:inputText id="uBatch" disabled="true" value="#{getStudentData.batch}"/>   
+
+
+                        <p:outputLabel  value="Year"/>
+                        <p:inputText value="#{getStudentData.year}" disabled="true" id="uyear"/> 
+
+
+                        <p:outputLabel  value="Section"/>
+                        <p:inputText id="usection" disabled="true" value="#{getStudentData.section}"/>   
+
+                        <p:outputLabel  value="Current Semester"/>
+                        <p:inputText id="usemester" value="#{getStudentData.sem}" disabled="true"/>   
+
+
+                        <p:outputLabel  value="1.Name:" style="font-weight: bold;"/>
+                        <p:outputLabel /> 
+                        <p:outputLabel /> 
+                        <p:outputLabel /> 
+
+
+                        <p:outputLabel value="First Name:"/>
+                        <p:inputText  id="ufirstName" value="#{getStudentData.name}"/>
+
+                        <p:outputLabel value="Middle Name:"/>
+                        <p:inputText value="#{getStudentData.middlename}"/>
+
+
+                        <p:outputLabel value="Last Name:"/>
+                        <p:inputText value="#{getStudentData.lastName}"/>
+                        <p:outputLabel/>
+                        <p:outputLabel/>
+
+                        <p:outputLabel value="2.Gender" style="font-weight: bold;"/>  
+                        <h:selectOneRadio id="ugender" value="#{getStudentData.gender}"> 
+                            <f:selectItem itemValue="male" itemLabel="Male" />
+                            <f:selectItem itemValue="female" itemLabel="Female" />
+                        </h:selectOneRadio>
+                        <p:outputLabel />
+                        <p:outputLabel />
+
+
+                        <p:outputLabel value="3.Date of Birth" style="font-weight: bold;"/>
+                        <p:outputLabel/>
+                        <p:outputLabel/>
+                        <p:outputLabel/>
+
+                        <p:outputLabel value="In A.D:" />
+                        <p:calendar  mask="true" id="umask" value="#{getStudentData.dateAd}" pattern="yyyy-MM-dd" />
+                        <p:outputLabel />
+                        <p:outputLabel/>
+
+                        <p:outputLabel  value="4.Nationality"/>
+                        <p:inputText id="unationality" value="#{getStudentData.nationality}" />
+
+
+                        <p:outputLabel  value="5.Religion"/>
+                        <p:inputText id="ureligion"  value="#{getStudentData.religion}"/>
+
+
+                        <p:outputLabel  value="6.Citizenship No:"/>
+                        <p:inputText id="ucitizen_no" value="#{getStudentData.citizenshipNO}"/>              
+
+
+                        <p:outputLabel  value="7.Mobile No:"/>
+                        <p:inputText id="umob_no" value="#{getStudentData.mobno}"/> 
+
+
+                        <p:outputLabel  value="8.Email:"/>
+                        <p:inputText id="uemail" value="#{getStudentData.email}"/> 
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Save" icon="ui-icon-disk" style="float: right;" action="#{getStudentData.infoUpdate}" update="form"/>
+                        </f:facet>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+
+
+
+
+            <p:dialog header="Student Information" widgetVar="addressDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="addressDetail">
+                    <h:panelGrid  columns="4" cellpadding="3">
+                        <f:facet name="header">
+                            <p:panel style="text-align:center; border: none;">
+                                <h:graphicImage value="DisplayImage?id=#{getStudentData.table.ID}" width="50" height="50"></h:graphicImage>
+                                <br/>
+                                <p:outputLabel value="#{getStudentData.table.ID}"/>
+                            </p:panel>
+                        </f:facet>
+
+                        <p:outputLabel value="10.Permanent address" style="font-weight: bold;"/>
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel  value="a.House No."/>
+                        <p:inputText id="updatehouse_no" value="#{getStudentData.house_no}" />
+
+                        <p:outputLabel  value="b.Street"/>
+                        <p:inputText id="updatestreet"   value="#{getStudentData.street}" />
+
+                        <p:outputLabel  value="c.VDC/Municipality."/>
+                        <p:inputText id="updatevdc"  value="#{getStudentData.vdc}"/>
+
+                        <p:outputLabel  value="d.Ward No."/>
+                        <p:inputText id="updatewardno"   value="#{getStudentData.wardno}" />
+
+                        <p:outputLabel  value="e.District."/>
+                        <p:inputText id="updatedistrict"   value="#{getStudentData.district}" />
+
+                        <p:outputLabel  value="f.Phone No."/>
+                        <p:inputText id="updatephone_no"   value="#{getStudentData.contact}" />
+
+                        <p:outputLabel value="11.Temporary address" style="font-weight: bold;"/>  
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel  value="a.House No."/>
+                        <p:inputText id="updatet_house_no"  value="#{getStudentData.t_house_no}" />
+
+                        <p:outputLabel  value="b.Street"/>
+                        <p:inputText id="updatet_street"   value="#{getStudentData.t_street}" />
+
+                        <p:outputLabel  value="c.VDC/Municipality."/>
+                        <p:inputText id="updatet_vdc"  value="#{getStudentData.t_vdc}" />
+
+                        <p:outputLabel  value="d.Ward No."/>
+                        <p:inputText id="updatet_wardno"   value="#{getStudentData.t_wardno}"/>
+
+                        <p:outputLabel  value="e.District."/>
+                        <p:inputText id="updatet_district"  value="#{getStudentData.t_district}"/>
+
+                        <p:outputLabel  value="f.Phone No."/>
+                        <p:inputText id="updatet_phone_no"   value="#{getStudentData.t_Contact}" />
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Save" icon="ui-icon-disk" action="#{getStudentData.infoUpdate2}" update="form" style="float: right;"/>
+                        </f:facet>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+
+
+
+            <p:dialog header="Student Information" widgetVar="educationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" >
+                <p:outputPanel id="educationDetail">
+                    <h:panelGrid  columns="4" cellpadding="3">
+                        <f:facet name="header">
+
+                            <h:outputLink value="DisplayImage?id=#{getStudentData.table.ID}" target="_blank" >
+                                <h:graphicImage value="DisplayImage?id=#{getStudentData.table.ID}" width="50" height="50"></h:graphicImage>
+                                <br/>
+                            </h:outputLink> 
+                            <p:outputLabel value="#{getStudentData.table.ID}"/>
+
+                        </f:facet>
+
+                        <p:outputLabel value="B.Educational Details:"/>  
+                        <p:outputLabel/>
+                        <p:outputLabel />
+                        <p:outputLabel />
+
+                        <p:outputLabel value="1.Details of SLC or equivalent Exam:" style="font-weight: bold;"/>  
+                        <p:outputLabel/>
+                        <p:outputLabel /> <p:outputLabel />
+
+                        <p:outputLabel  value="a.Board"/>
+                        <p:inputText id="updates_board"  value="#{getStudentData.slcBoard}" />         
+
+                        <p:outputLabel  value="b.School"/>
+                        <p:inputText id="updates_school"   value="#{getStudentData.slcSchool}" />              
+
+                        <p:outputLabel  value="c.Passed Year in A.D"/>
+                        <p:inputText id="updates_pass_year"    value="#{getStudentData.slcPassedYear}"/>   
+
+                        <p:outputLabel  value="d.Passed Year in B.S"/>
+                        <p:inputText id="updates_pass_yearnepali"    value="#{getStudentData.slcPassedYearnep}"/>   
+
+                        <p:outputLabel  value="e.Passed Division"/>
+                        <p:inputText id="updates_pass_division"   value="#{getStudentData.slcDivision}"/>
+
+                        <p:outputLabel  value="f.Symbol No."/>
+                        <p:inputText id="updates_symbol_no"    value="#{getStudentData.slcSymbol}"/>         
+
+                        <p:outputLabel  value="g.Percentage"/>
+                        <p:inputText id="updates_percentage"    value="#{getStudentData.slcPercentage}"/>
+
+                        <p:outputLabel  value="h.Grade:"/>
+                        <p:inputText id="updategrade" value="#{getStudentData.slcGrade}" disabled="true"/>         
+
+
+                        <p:outputLabel  value="i.Major Subjects."/>
+                        <p:inputText id="updates_major_subjects"    value="#{getStudentData.slcMajorSubject}"/>              
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel value="2.Details of PCL/+2 or eqivalent Exam:" style="font-weight: bold;"/>  
+                        <p:outputLabel/>
+                        <p:outputLabel /> <p:outputLabel />
+                        <p:outputLabel  value="a.Board"/>
+                        <p:inputText id="updateh_board"   value="#{getStudentData.plus2Board}"/>         
+
+                        <p:outputLabel  value="b.PCL/+2/Others"/>
+                        <p:inputText id="updateh_choice"   value="#{getStudentData.plus2Others}"/>              
+
+                        <p:outputLabel  value="c.School/College"/>
+                        <p:inputText id="updateh_college"    value="#{getStudentData.plus2School}"/>              
+
+                        <p:outputLabel  value="d.Passed Year in A.D"/>
+                        <p:inputText id="updateh_pass_year"    value="#{getStudentData.plus2PassedYear}"/>   
+
+                        <p:outputLabel  value="e.Passed Year in B.S"/>
+                        <p:inputText id="updateh_pass_yearnepali"   value="#{getStudentData.plus2PassedYearnep}"/> 
+
+                        <p:outputLabel  value="f.Passed Division"/>
+                        <p:inputText id="updateh_pass_division"  value="#{getStudentData.plus2Division}"/>
+
+                        <p:outputLabel  value="g.TU/HSEB/Other Registration No."/>
+                        <p:inputText id="updateh_registration_no"   value="#{getStudentData.plus2Symbol}"/>         
+
+                        <p:outputLabel  value="h.Percentage"/>
+                        <p:inputText id="updateh_percentage"    value="#{getStudentData.plus2Percentage}"/>
+
+                        <p:outputLabel  value="i.Major Subjects."/>
+                        <p:inputText id="updateh_major_subjects"   value="#{getStudentData.plus2MajorSubject}"/>              
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel value="3.Number Scored in CMAT Exam:"/>
+                        <p:outputLabel/>
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <h:outputText  value="a.CMAT Roll No."/>
+                        <p:inputText id="updatec_roll_no"   value="#{getStudentData.cmatSymbol}"/>
+
+                        <p:outputLabel  value="b.CMAT Score"/>
+                        <p:inputText id="updatec_score"   value="#{getStudentData.cmatMarks}"/>
+                        <f:facet name="footer">
+                            <p:commandButton value="Save" icon="ui-icon-disk" action="#{getStudentData.infoUpdate3}" update="form" style="float: right;"/>
+                        </f:facet>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+
+
+
+
+            <p:dialog header="Student Information" widgetVar="familyDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="familyDetail" >
+                    <h:panelGrid  columns="4" cellpadding="3">
+                        <f:facet name="header">
+                            <h:outputLink value="DisplayImage?id=#{getStudentData.table.ID}" target="_blank" >
+                                <h:graphicImage value="DisplayImage?id=#{getStudentData.table.ID}" width="50" height="50"></h:graphicImage>
+                                <br/>
+                            </h:outputLink> 
+                            <p:outputLabel value="#{getStudentData.table.ID}"/>
+
+                        </f:facet>
+
+                        <p:outputLabel value="12.Father's Details:" style="font-weight: bold;"/>  
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel />
+
+                        <p:outputLabel  value="a.Name"/>
+                        <p:inputText id="updatef_name"  value="#{getStudentData.f_name}" />         
+
+                        <p:outputLabel  value="b.Occupation"/>
+                        <p:inputText id="updatef_occupation"   value="#{getStudentData.f_occupation}" />
+
+                        <p:outputLabel  value="c.Address"/>
+                        <p:inputText id="updatef_address"   value="#{getStudentData.f_address}" />              
+
+                        <p:outputLabel  value="d.Phone No."/>
+                        <p:inputText id="updatef_phone_no"  value="#{getStudentData.f_phone_no}"/>              
+
+                        <p:outputLabel  value="e.Mobile No."/>
+                        <p:inputText id="updatef_mobil_no"   value="#{getStudentData.f_mobilno}"/>              
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel value="13.Guardian's Details:" style="font-weight: bold;"/>  
+                        <p:outputLabel />
+                        <p:outputLabel /> <p:outputLabel />
+                        <p:outputLabel  value="a.Name"/>
+                        <p:inputText id="updateg_name"   value="#{getStudentData.g_name}" />         
+
+                        <p:outputLabel  value="b.Occupation"/>
+                        <p:inputText id="updateg_occupation"    value="#{getStudentData.g_occupation}" />
+
+                        <p:outputLabel  value="c.Address"/>
+                        <p:inputText id="updateg_address"  value="#{getStudentData.g_address}" />              
+
+                        <p:outputLabel  value="d.Phone No."/>
+                        <p:inputText id="updateg_phone_no" value="#{getStudentData.g_phone_no}"/>              
+
+                        <p:outputLabel  value="e.Mobile No."/>
+                        <p:inputText id="updateg_mobil_no"   value="#{getStudentData.g_mobilno}" />
+                        <p:outputLabel/>
+                        <p:outputLabel/>
+                        <f:facet name="footer">
+                            <p:commandButton value="Save" icon="ui-icon-disk" action="#{getStudentData.infoUpdate4}" update="form" style="float: right;"/>
+                        </f:facet>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+
+
+
+            <p:dialog header="Student Information" widgetVar="documentDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="documentDetail">
+                    <h:panelGrid  columns="4" cellpadding="3">
+                        <f:facet name="header">
+                            <h:outputLink value="DisplayImage?id=#{getStudentData.table.ID}" target="_blank" >
+                                <h:graphicImage value="DisplayImage?id=#{getStudentData.table.ID}" width="50" height="50"></h:graphicImage>
+                                <br/>
+                            </h:outputLink> 
+                            <p:outputLabel value="#{getStudentData.table.ID}"/>
+
+                        </f:facet>
+
+                        <p:outputLabel  value="Documents submitted"/>
+                        <p:outputLabel />
+                        <p:outputLabel />
+                        <p:outputLabel />
+
+                        <p:outputLabel  value="SLC Transcript"/>
+                        <p:inputText id="uslc_transcript"  value="#{getStudentData.slcTranscript}"/>
+
+                        <p:outputLabel  value="SLC Charater Certificate"/>
+                        <p:inputText id="uslc_character_certificate" value="#{getStudentData.slcCertificate}"/>
+
+                        <p:outputLabel  value="+2 Transcript"/>
+                        <p:inputText id="uplus2_transcript"  value="#{getStudentData.plus2Transcript}"/>
+
+                        <p:outputLabel value="+2 Character Certificate"/>
+                        <p:inputText id="uplus2_character_certificate"  value="#{getStudentData.plus2Certificate}"/>
+
+                        <p:outputLabel value="Citizenship Photocopy"/>
+                        <p:inputText id="ucitizenship_photocopy"  value="#{getStudentData.citizenship}"/>
+
+                        <p:outputLabel value="Photo"/>
+                        <p:inputText id="uphoto"  value="#{getStudentData.photo}"/>
+                        <f:facet name="footer">
+                            <p:commandButton value="Save" icon="ui-icon-disk" action="#{getStudentData.infoUpdate5}" update="form" style="float: right;"/>
+                        </f:facet>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+
+            <p:dialog header="Student Information" widgetVar="photoDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+
+                <h:panelGrid columns="1" cellpadding="5" id="photoDetail" style="text-align:center;">
+                    <f:facet name="header">
+
+                        <h:graphicImage value="DisplayImage?id=#{getStudentData.table.ID}" width="50" height="50"></h:graphicImage>
+
+                    </f:facet>
+
+                    <p:outputLabel value="Select Image: *" />
+                    <p:fileUpload value="#{getStudentData.file}" mode="simple" sizeLimit="9000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                  requiredMessage="Image missing" multiple="true"/>
+                    <f:facet name="footer">
+                        <p:commandButton value="Save" ajax="false"  update=":form:image" process="@this"
+                                         actionListener="#{getStudentData.changeImage}" icon="ui-icon-disk" oncomplete="handleLoginRequest(xhr, status, args)"
+                                         onerror="carDialog.show()">
+                            <f:param name="id" value="#{getStudentData.table.ID}"/>
+                        </p:commandButton>
+
+                    </f:facet>   
+                </h:panelGrid>
+            </p:dialog>
+
+
+
+        </h:form> 
+    </h:body>
+</html>

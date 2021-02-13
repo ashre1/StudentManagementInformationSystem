@@ -1,0 +1,171 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+        <style>
+
+            body{
+
+                //background-color: purple;
+                background-image: url("resources/images/background.png");
+                background-size: cover;
+                background-repeat: no-repeat;
+                //     overflow: hidden;
+                padding: 0px;
+            }
+
+            .ui-panelgrid td, .ui-panelgrid tr{
+                border-style: none !important
+            }
+
+            .Banner{
+
+                //background-color: purple;
+                background-image: url("resources/images/ndf1.gif");
+                background-size: cover;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p:growl id="message" showDetail="false"/>
+
+            <p:dialog id="dialog1" header="Confirmation" widgetVar="confirm" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="1" cellpadding="5" id="grida1" style="text-align: center;">
+                    <p:outputLabel value="Are you Sure"/>
+                    <p:separator />
+                    <f:facet name="footer" id="foot">
+                        <p:commandButton value="Yes" action="#{loginBeans.logout}" update="grida1" process="grida1" icon="ui-icon-check"/>
+                        <p:spacer width="25"/>
+                        <p:commandButton value="No"  icon="ui-icon-close" onclick="PF('confirm').hide();"/>
+                    </f:facet>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:dialog id="dialog" header="Change Password" widgetVar="pass" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="2" cellpadding="5" id="grida">
+
+                    <p:growl id="msgs" life="3000"/>
+                    <h:outputLabel value="" />
+
+                    <p:outputLabel value="UserName:"/>
+                    <p:inputText value="#{loginBeans.userName}" disabled="true"/>
+
+
+                    <p:outputLabel for="password" value="Password:" />
+                    <p:password id="password" value="#{loginBeans.oddPass}"/>
+
+                    <p:outputLabel for="pass1" value="New Password:" />
+                    <p:password id="pass1" value="#{loginBeans.newPass}"/>
+
+
+                    <p:outputLabel for="pass2" value="New Password:" />
+                    <p:password id="pass2" value="#{loginBeans.confirmPass}"/>
+
+
+                    <f:facet name="footer" id="foo">
+                        <p:commandButton value="Change" update="grida" process="grida" actionListener="#{loginBeans.change}" icon="ui-icon-arrowrefresh-1-w"
+                                         oncomplete="handleLoginRequest(xhr, status, args)" onerror="pass.show()" style="float: right;"/>
+                    </f:facet>
+
+                </h:panelGrid>
+            </p:dialog>
+
+
+            <p:panelGrid columns="1" style="width: 900px; margin: 0 auto;">
+
+                <p:panel styleClass="Banner" style=" height:100px;">
+
+                </p:panel>
+
+                <p:menubar styleClass="MenuBar">
+                    <p:menuitem value="Home" outcome="userPanel" icon="ui-icon-extlink"/>
+                    <p:submenu label="Student Details" icon="ui-icon-pencil">
+                        <p:menuitem value="Add Student" outcome="StudentForm" />
+                        <p:menuitem value="View Student" outcome="ViewInformation"/>
+                        <p:menuitem value="Update Semester" outcome="CurrentStudent"/>
+                        <p:menuitem value="Punishment" outcome="Remarks"/>
+                        <p:menuitem value="Delete Student" outcome="Delete"/>
+
+                    </p:submenu>
+                    <p:submenu label="Attendance" icon="ui-icon-folder-open">
+                        <p:menuitem value="Daily Attendance" outcome="Attendance" />
+                        <p:menuitem value="View Attendance" outcome="ViewAttendance" />
+                    </p:submenu>
+                    <p:submenu label="Marksheet" icon="ui-icon-document">
+                        <p:menuitem value="Add Marks" outcome="marksForm" />
+                        <p:menuitem value="View Marks" outcome="viewMarks" />
+                    </p:submenu>
+                    <p:menuitem value="View Details" outcome="IndividualRecords" icon="ui-icon-search"/>
+                    <p:submenu label="#{loginBeans.name}">
+                        <p:menuitem value="Change Password" icon="ui-icon-arrowrefresh-1-w" onclick="PF('pass').show();" title="Change Password"/>
+                        <p:menuitem value="Logout" icon="ui-icon-close" onclick="PF('confirm').show();"/>
+                    </p:submenu>
+                </p:menubar>
+
+                <p:panel header="Upgrade Student" style="text-align: center; height:465px; padding: 0px;">
+                    <h:panelGrid columns="2">
+
+                        <h:panelGrid columns="2" cellpadding="5" style="text-align: left; padding-left: 50px;">
+                            <p:spacer height="10"/>
+                            <p:spacer height="10"/>
+
+                            <p:outputLabel value="Program: "/>
+                            <p:selectOneMenu value="#{studBean.prog}" id="program" required="true" requiredMessage="Please Enter Program" style="width: 200px;">  
+                                <f:selectItem itemLabel="Select Program" itemValue="" />
+                                <f:selectItems value="#{studBean.categoryName}"/> 
+                                <p:ajax update="batch" event="change" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Batch: "/>
+                            <p:selectOneMenu value="#{studBean.batch}" id="batch" required="true" requiredMessage="Please Enter Batch" style="width: 200px;">  
+                                <f:selectItem itemLabel="Select Batch" itemValue="" />
+                                <f:selectItems value="#{studBean.batchFrom}"/> 
+                                <p:ajax update="csem" event="change"/>
+                            </p:selectOneMenu>
+
+
+                            <p:outputLabel value="Currrent Semester: "/>
+                            <p:inputText value="#{studBean.semester1}" id="csem" disabled="true"/>
+
+
+                            <p:outputLabel value="Year: "/>
+                            <p:inputText value="#{studBean.year}" id="year"/>
+
+                            <p:outputLabel value="Upgrade Semester:"/>
+                            <p:selectOneMenu value="#{studBean.sem}" id="sem" required="true" requiredMessage="Please Enter Current Semester" style="width: 200px;">  
+                                <f:selectItem itemLabel="Select Semester" itemValue="" />
+                                <f:selectItems value="#{studBean.semester}"/> 
+                            </p:selectOneMenu>
+
+
+                            <p:outputLabel value="Semester Type:"/>
+                            <p:selectOneMenu value="#{studBean.even}" id="odd" required="true" requiredMessage="Please Enter Odd/Even" style="width: 200px;">  
+                                <f:selectItem itemLabel="Select Odd or Even" itemValue="" />
+                                <f:selectItems value="#{studBean.odd}"/> 
+                            </p:selectOneMenu>
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Submit" actionListener="#{studBean.update()}" resetValues="true" update="form" icon="ui-icon-pencil" style="float: right;"/>
+                            </f:facet>
+                        </h:panelGrid>
+                        <p:panel style="border: none;">
+
+                            <p:graphicImage value="resources/images/upgrade.png" style="padding-left: 100px;"/>
+                        </p:panel>
+                    </h:panelGrid>
+                </p:panel>
+            </p:panelGrid>
+
+        </h:form>
+    </h:body>
+</html>
+

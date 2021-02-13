@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title></title>
+
+        <script type="text/javascript">
+            function handleLoginRequest(xhr, status, args) {
+                if (args.validationFailed || !args.ok) {
+                    PF('pass').jq.effect("shake", {times: 5}, 1000);
+                }
+                else {
+                    PF('pass').hide();
+                    $('#loginLink').fadeOut();
+                }
+            }
+
+        </script>
+
+        <style>
+
+            .Bimage .ui-layout-unit-content{
+
+                //background-color: purple;
+                background-image: url("resources/images/background.png");
+                // background-size: contain;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+
+            .ui-panelgrid td, .ui-panelgrid tr{
+                border-style: none !important
+            }
+
+
+            .Banner .ui-layout-unit-content{
+
+                //background-color: purple;
+                background-image: url("resources/images/ndf1.gif");
+                background-size: cover;
+                background-repeat: no-repeat;
+                overflow: hidden;
+            }
+
+
+            .Bttn{
+                width: 175px; 
+                height: 100px; 
+                border-radius: 12px; 
+                text-align: center;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+
+            <p:dialog id="dialog" header="Change Password" widgetVar="pass" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="2" cellpadding="5" id="grida">
+
+                    <p:growl id="msgs" life="3000"/>
+                    <h:outputLabel value="" />
+
+                    <p:outputLabel value="UserName:"/>
+                    <p:inputText value="#{loginBeans.userName}" disabled="true"/>
+
+
+                    <p:outputLabel for="password" value="Password:" />
+                    <p:password id="password" value="#{loginBeans.oddPass}"/>
+
+                    <p:outputLabel for="pass1" value="New Password:" />
+                    <p:password id="pass1" value="#{loginBeans.newPass}"/>
+
+
+                    <p:outputLabel for="pass2" value="New Password:" />
+                    <p:password id="pass2" value="#{loginBeans.confirmPass}"/>
+
+
+                    <f:facet name="footer" id="foo">
+                        <p:commandButton value="Change" update="grida" process="grida" actionListener="#{loginBeans.change}" icon="ui-icon-arrowrefresh-1-w"
+                                         oncomplete="handleLoginRequest(xhr, status, args)" onerror="pass.show()" style="float: right;"/>
+                    </f:facet>
+
+                </h:panelGrid>
+            </p:dialog>
+
+
+            <p:layout fullPage="true">
+
+                <p:layoutUnit id="left" position="west"  size="225" style="border: 0px; padding: 0px;" styleClass="Bimage">
+
+                </p:layoutUnit>
+
+                <p:layoutUnit id="right" position="east" size="225" resizable="false"
+                              style="border: none; padding: 0px" styleClass="Bimage">
+
+                </p:layoutUnit>
+
+
+                <p:layoutUnit id="center" position="center" style="padding-top: 10px; border: none">
+
+                    <p:layout>
+
+                        <p:layoutUnit position="north" size="100" style="padding: 0px;" styleClass="Banner">
+                        </p:layoutUnit>
+
+                        <p:layoutUnit id="in_center" position="center" style="padding-top: 0px; padding-left: 0px; padding-right: 0px; text-align: center;" header="Welcome to Admin Page">
+
+                            <h:panelGrid columns="2" cellpadding="5" style="padding-left: 30px; padding-top: 0px;">
+
+                                <p:panel header="#{loginBeans.name}" style="text-align: center; width: 250px;">
+                                    <h:panelGrid columns="1" cellpadding="7">
+                                        <f:facet name="header">
+                                            <h:graphicImage value="displayUser?image_id=#{loginBeans.imageId}" width="200" height="200"/>
+                                        </f:facet>
+                                    </h:panelGrid>
+
+                                    <p:commandButton value="Change Password" onclick="PF('pass').show();" title="Change Password"/>
+
+                                </p:panel>
+
+                                <p:panel style="padding-left: 30px; padding-right: 0px; padding-top: 0px; border: none;">
+                                    <br/>
+                                    <p:panelGrid columns="3" style=" border: none;">
+
+                                        <p:commandButton value="Add User" action="addUser" styleClass="Bttn"/>
+                                        <p:spacer width="90"/>
+                                        <p:commandButton value="Manage User" action="manageUser" styleClass="Bttn"/>
+
+                                        <p:spacer height="30"/>
+                                        <p:spacer height="30"/>
+                                        <p:spacer height="30"/>
+
+                                        <p:commandButton value="User Log" action="userLog" styleClass="Bttn"/>
+                                        <p:spacer width="90"/>
+                                        <p:commandButton value="View Student Details" action="Individual" styleClass="Bttn"/>
+
+
+                                        <p:spacer height="30"/>
+                                        <p:spacer height="30"/>
+                                        <p:spacer height="30"/>
+
+                                        <p:commandButton value="Change Images" action="imageupload" styleClass="Bttn"/>
+                                        <p:spacer width="90"/>
+                                        <p:commandButton value="Logout" action="#{loginBeans.logout}" styleClass="Bttn"/>
+
+                                    </p:panelGrid>
+
+                                </p:panel>
+                            </h:panelGrid>
+                        </p:layoutUnit>
+
+
+                    </p:layout>
+
+                </p:layoutUnit>
+
+            </p:layout>
+
+        </h:form>
+    </h:body>
+</html>
+

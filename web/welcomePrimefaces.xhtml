@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Student Information System</title>
+            </f:facet>
+
+
+            <script type="text/javascript">
+                function handleLoginRequest(xhr, status, args) {
+                    if (args.validationFailed || !args.loggedIn) {
+                        PF('dlg').jq.effect("shake", {times: 5}, 1000);
+                    }
+                    else {
+                        PF('dlg').hide();
+                        $('#loginLink').fadeOut();
+                    }
+                }
+
+            </script>
+
+
+            <style>
+
+                .Bimage .ui-layout-unit-content{
+
+                    //background-color: purple;
+                    background-image: url("resources/images/nccs1.gif");
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    overflow: hidden;
+                }
+
+                .ui-panelgrid td, .ui-panelgrid tr{
+                    border-style: none !important
+                }
+
+            </style>
+        </h:head>
+
+        <h:body>
+            <h:form id="form">
+                <p:dialog id="dialog" header="Login" widgetVar="dlg" resizable="false" draggable="false" style="border-radius: 10px" showEffect="explode" modal="true">
+                    <h:panelGrid columns="2" cellpadding="5" id="panel">
+
+                        <p:growl id="msgs"  showDetail="true" life="3000"/>
+                        <h:outputLabel value="" />
+
+                        <h:outputLabel for="username" value="Username:" />
+                        <p:inputText id="username" value="#{loginBeans.userName}"/>
+
+                        <h:outputLabel for="password" value="Password:" />
+                        <p:password id="password" value="#{loginBeans.password}" widgetVar="pass"/>
+
+                        <p:outputLabel for="usertype" value="UserType:" />
+                        <p:selectOneMenu id="usertype" value="#{loginBeans.userType}" effect="fold" style="width:203px;" >
+                            <f:selectItem itemLabel="Select One" itemValue="" />
+                            <f:selectItems value="#{loginBeans.comboType}"/>
+                        </p:selectOneMenu>
+
+                        <f:facet name="footer" >
+                            <p:commandButton value="Login" update="panel" process="panel" action="#{loginBeans.login}"
+                                             oncomplete="handleLoginRequest(xhr, status, args)" onerror="dlg.show()" style="float: right;">
+
+                            </p:commandButton>
+
+                            <p:hotkey bind="enter" update="panel" process="panel" action="#{loginBeans.login()}"
+                                      oncomplete="handleLoginRequest(xhr, status, args)" onerror="dlg.show()">
+
+                            </p:hotkey>
+                        </f:facet>  
+                    </h:panelGrid>
+                </p:dialog>
+
+
+                <p:layout fullPage="true">
+
+                    <p:layoutUnit position="north" size="100" style="padding: 0px;" styleClass="Bimage">
+
+                    </p:layoutUnit>
+
+                    <p:layoutUnit id="left" position="west"  size="325" style="border: none;">
+
+                        <p:layout>
+                            <p:layoutUnit position="north" header="Calendar" size="315" style="border: none; padding-bottom: 0px; text-align: center;">
+                                <p:calendar id="inline" value="#{NoticeView.date1}" mode="inline">
+                                    <p:ajax event="dateSelect" listener="#{NoticeView.onDateSelect}" update=":form:hello" />
+                                </p:calendar>
+
+                            </p:layoutUnit>
+
+                            <p:layoutUnit position="center" header="Notice" size="315" style="border: none; padding-top: 0px; text-align: center;">
+                           
+                                <p:dataGrid id="hello" value="#{NoticeView.notice}" columns="1" var="note" style="border: none; width: 307px; text-align: left;">
+                                    <h:outputText value="#{note.name}" style="color: #036fab;"/>
+                                </p:dataGrid>
+
+                            </p:layoutUnit>
+                        </p:layout>
+
+                    </p:layoutUnit>
+
+                    <p:layoutUnit id="right" position="east" size="350" resizable="false" style="border: none;">
+
+                        <p:layout>
+                            <p:layoutUnit position="north" style="border: none; padding-bottom: 0px; text-align: center;">
+                                <h:outputLink value="javascript:void(0)" onclick="PF('dlg').show();" title="login" >
+                                    <p:graphicImage value="resources/images/login.gif" width="300" height="75"/>
+                                </h:outputLink>
+                            </p:layoutUnit>
+
+                            <p:layoutUnit position="center" header="Routine" size="350" style="border: none; padding-top: 0px;text-align: center;">
+                                <p:panel style="height: 385px; padding-left: 0px;">
+
+                                    <p:panelGrid columns="2">
+                                        <h:outputText value="Program: "/>
+                                        <p:selectOneMenu value="#{uploadroutine.program}" id="program" required="true" requiredMessage="Please Enter Program"  style="width: 150px; ">  
+                                            <f:selectItem itemLabel="Program" itemValue="" />
+                                            <f:selectItems value="#{uploadroutine.categoryName}"/> 
+                                            <p:ajax update="semester" event="change" />
+                                        </p:selectOneMenu>
+
+                                        <h:outputText value="Semester: "/>
+                                        <p:selectOneMenu value="#{uploadroutine.sem}" id="semester" required="true" requiredMessage="Please Enter Program" style="width: 150px">  
+                                            <f:selectItem itemLabel="Semester" itemValue="" />
+                                            <f:selectItems value="#{uploadroutine.semester}"/> 
+                                        </p:selectOneMenu>
+                                        <h:outputText value="Section: "/>
+                                        <p:selectOneMenu value="#{uploadroutine.section}" id="section" required="true" requiredMessage="Please Enter Program" style="width: 150px">  
+                                            <f:selectItem itemLabel="Section" itemValue="" />
+                                            <f:selectItems value="#{uploadroutine.sec}"/> 
+                                        </p:selectOneMenu>
+                                        <p:spacer/>
+                                        <p:commandButton  value="Show" ajax="false" icon="ui-icon-script" update=":form:student" process="=@this" style="text-align: center; float: right;"/>
+                                    </p:panelGrid>
+
+                                    <p:dataGrid var="item" value="#{uploadroutine.allImage1}" columns="1" layout="grid"
+                                                id="student" style=" margin:0 auto; padding: 0px; height: 150px;">
+
+                                        <f:facet name="header">
+                                            <p:outputLabel value="#{uploadroutine.program} #{uploadroutine.sem} #{uploadroutine.section}"/>
+                                        </f:facet>
+                                        <p:panel style="text-align:center; border: none; padding: 0px; height: 150px;">
+
+                                            <p:lightBox styleClass="imagebox" width="1000">
+                                                <h:outputLink value="DisplayRoutine?Image_id=#{item.id}" title="#{uploadroutine.program} #{uploadroutine.sem} #{uploadroutine.section}" style="text-align: center;">
+                                                    <h:graphicImage value="DisplayRoutine?Image_id=#{item.id}" width="200" height="130" style="alignment-adjust: central"></h:graphicImage>
+                                                </h:outputLink>
+                                            </p:lightBox>
+
+                                        </p:panel>
+                                    </p:dataGrid>
+
+                                </p:panel>
+                            </p:layoutUnit>
+                        </p:layout>
+
+                    </p:layoutUnit>
+
+                    <p:layoutUnit id="center" position="center" style="overflow: hidden !important;">
+
+                        <p:imageSwitch effect="shuffle" speed="300">
+                            <ui:repeat value="#{imageBean.allImage}" var="image">
+                                <p:graphicImage value="displayImage?Image_id=#{image.imageID}" height="386" width="670"/>
+                            </ui:repeat>
+                        </p:imageSwitch>
+                        <br/>
+
+                        <p:graphicImage value="/resources/images/logo.jpg" height="95" width="670"/>
+
+                        <p:graphicImage value="/resources/images/address.gif" height="40" width="670"/>
+                    </p:layoutUnit>
+
+                </p:layout>
+            </h:form>
+        </h:body>
+
+    </f:view>
+</html>
+

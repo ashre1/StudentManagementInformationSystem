@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    
+    
+    <navigation-rule> 
+        <from-view-id>/welcomePrimefaces.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{loginBeans.login}</from-action>
+            <from-outcome>adminPanel</from-outcome>
+            <to-view-id>/adminPanel.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-action>#{loginBeans.login}</from-action>
+            <from-outcome>userPanel</from-outcome>
+            <to-view-id>/userPanel.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/adminPanel.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>addUser</from-outcome>
+            <to-view-id>/addUser.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>manageUser</from-outcome>
+            <to-view-id>/manageUser.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>imageupload</from-outcome>
+            <to-view-id>/imageupload.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>userLog</from-outcome>
+            <to-view-id>/userLog.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>Individual</from-outcome>
+            <to-view-id>/Individual.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        
+
+    </navigation-rule> 
+    
+    <navigation-rule>
+        <from-view-id>/adminPanel.xhtml</from-view-id>
+        <from-view-id>/addUser.xhtml</from-view-id>
+        <from-view-id>/manageUser.xhtml</from-view-id>
+        <from-view-id>/imageupload.xhtml</from-view-id>
+        <from-view-id>/userLog.xhtml</from-view-id>
+
+        <navigation-case>
+            <from-action>#{loginBeans.login}</from-action>
+            <from-outcome>welcomePrimefaces</from-outcome>
+            <to-view-id>/welcomePrimefaces.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+      
+    </navigation-rule>
+    
+
+</faces-config>

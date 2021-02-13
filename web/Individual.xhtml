@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:h="http://xmlns.jcp.org/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://xmlns.jcp.org/jsf/core"
+       xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:head>
+        <title></title>
+        <style>
+
+            body{
+
+                //background-color: purple;
+                background-image: url("resources/images/background.png");
+                background-size: cover;
+                background-repeat: no-repeat;
+                //     overflow: hidden;
+                padding: 0px;
+            }
+
+            .ui-panelgrid td, .ui-panelgrid tr{
+                border-style: none !important
+            }
+
+            .Banner{
+
+                //background-color: purple;
+                background-image: url("resources/images/ndf1.gif");
+                background-size: cover;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="false" sticky="false"  life="5000"/> 
+            <p:dialog id="dialog1" header="Confirmation" widgetVar="confirm" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="1" cellpadding="5" id="grida1" style="text-align: center;">
+                    <p:outputLabel value="Are you Sure"/>
+                    <p:separator />
+                    <f:facet name="footer" id="foot">
+                        <p:commandButton value="Yes" action="#{loginBeans.logout}" update="grida1" process="grida1" icon="ui-icon-check"/>
+                        <p:spacer width="25"/>
+                        <p:commandButton value="No"  icon="ui-icon-close" onclick="PF('confirm').hide();"/>
+                    </f:facet>
+                </h:panelGrid>
+            </p:dialog>
+
+
+
+            <p:panelGrid columns="1" style="width: 900px; margin: 0 auto;">
+                <p:panel styleClass="Banner" style=" height:100px;">
+
+                </p:panel>
+
+
+                <p:toolbar style="padding-right: 0px;">
+                    <f:facet name="right">
+                        <p:outputLabel value="User Log"/> 
+                        <p:spacer width="250" height="20"/>
+                        <p:splitButton  value="Menu">
+                            <p:menuitem value="Home Page"  icon="ui-icon-extlink" outcome="adminPanel"/>
+                            <p:separator />
+                            <p:menuitem value="Add User"  icon="ui-icon-document" outcome="addUser"/>
+                            <p:menuitem value="Manage User"  icon="ui-icon-pencil" outcome="manageUser"/>
+                            <p:menuitem value="User Log"  icon="ui-icon-folder-open" outcome="userLog"/>
+                            <p:menuitem value="Change Image" icon="ui-icon-arrowrefresh-1-w" outcome="imageupload"/>
+                            <p:menuitem value="Student Info" icon="ui-icon-search" outcome="Individual"/>
+                            <p:separator />
+                            <p:menuitem value="Logout" icon="ui-icon-close" onclick="PF('confirm').show();"/>
+                        </p:splitButton>
+                    </f:facet>
+                </p:toolbar>
+
+                <p:panel>
+                    <h:panelGrid columns="3" cellpadding="5">
+                        <p:outputLabel for ="inPut" value ="Registration No: "/>
+                        <p:inputText id ="inPut" value="#{check.student_id}" required="true" requiredMessage="Please enter Reg No."/>
+                        <p:commandButton id="display" value="Show" style="float: right;"  update="form" icon="ui-icon-script" actionListener="#{check.information}">
+                            <f:ajax render="grid"/>
+                        </p:commandButton>
+
+
+                    </h:panelGrid>
+
+                    <br/>
+
+
+                    <p:panel id="grid" header="Information of #{check.student_id}" style="text-align: center; border: none;"  rendered="#{check.ok=='true'}">
+
+                        <h:panelGrid id="rgida" columns="5" cellpadding="5" style="text-align: left;">
+                            <f:facet name="header">
+                                <h:graphicImage value="DisplayImage?id=#{check.student_id}" width="150" height="150"></h:graphicImage>
+                            </f:facet>
+
+                            <p:outputLabel value="Full Name: "/>
+                            <p:inputText value="#{check.firstName} #{check.middleName} #{check.lastName}" disabled="true"/>
+                            <p:spacer width="50" height="10"/>
+                            <p:outputLabel value="Faculty  : "/>
+                            <p:inputText value="#{check.facultyName}" disabled="true"/>
+
+                            <p:outputLabel value="Year : "/>
+                            <p:inputText value="#{check.year}" disabled="true"/>
+                            <p:outputLabel/>
+                            <p:outputLabel value="Batch : "/>
+                            <p:inputText value="#{check.batch}" disabled="true"/>
+
+                            <p:outputLabel value="D O B: "/>
+                            <p:inputText value="#{check.DOB}" disabled="true"/>
+                            <p:outputLabel/>
+                            <p:outputLabel value="Mobile no. : "/>
+                            <p:inputText value="#{check.mobileNo}" disabled="true"/>
+
+                            <p:outputLabel value="Phone No: "/>
+                            <p:inputText value="#{check.phone_no}"/>
+                            <p:outputLabel/>
+                            <p:outputLabel value="Permanent Address : "/>
+                            <p:inputText value="#{check.perAdd}" disabled="true"/>
+
+                            <p:outputLabel value="Temporary Address : "/>
+                            <p:inputText value="#{check.tempAdd}" disabled="true"/>
+                            <p:outputLabel/>
+                            <p:outputLabel value="Plus (+2) College : "/>
+                            <p:inputText value="#{check.plus2}" disabled="true"/>
+
+                            <p:outputLabel value="Plus (+2) Percentage : "/>
+                            <p:inputText value="#{check.pluspercent}" disabled="true"/>
+                            <p:outputLabel/>
+                            <p:outputLabel value="CMAT Score : "/>
+                            <p:inputText value="#{check.cmatScore}" disabled="true"/>
+
+                            <p:outputLabel value="Father's Name : "/>
+                            <p:inputText value="#{check.fatherName}" disabled="true"/>
+                            <p:outputLabel/>
+                            <p:outputLabel value="Occupation : "/>
+                            <p:inputText value="#{check.fatheroccupation}" disabled="true"/>
+
+                            <p:outputLabel value="Phone No : "/>
+                            <p:inputText value="#{check.fatherPhn}" disabled="true"/>
+                            <p:outputLabel/>
+                            <p:outputLabel value="Guardian's Name : "/>
+                            <p:inputText value="#{check.guaname}" disabled="true"/>
+
+                            <p:outputLabel value="Occupation : "/>
+                            <p:inputText value="#{check.goccupation}" disabled="true"/>
+                            <p:outputLabel/>
+                            <p:outputLabel value="Phone No : "/>
+                            <p:inputText value="#{check.gphone}" disabled="true"/>
+
+                        </h:panelGrid>
+
+
+                        <p:spacer height="40"/>
+
+                        <p:dataTable id ="batchTbl" var="bat" value="#{check.attndRecord}">
+                            <f:facet name="header">
+                                <p:outputLabel value="Attendance Record"/>
+                            </f:facet>
+                            <p:column headerText="Date">
+                                <p:outputLabel value="#{bat.date}" />
+                            </p:column>
+
+
+                            <p:column headerText="Abs_Pre">
+                                <p:outputLabel value="#{bat.abs_pre}" />
+                            </p:column>
+
+
+                            <p:column headerText="Remarks">
+                                <p:outputLabel value="#{bat.remarks}"/>
+                            </p:column>
+
+                        </p:dataTable>
+
+                        <p:spacer height="40"/>
+
+                        <p:dataTable id="table" var="cat" value="#{check.punishmentRecord}">
+                            <f:facet name="header">
+                                <p:outputLabel value="Punishment Record"/>
+                            </f:facet>
+                            <p:column headerText="Date">
+                                <p:outputLabel value="#{cat.punishDate}"/>
+                            </p:column>
+
+                            <p:column headerText="Topic">
+                                <p:outputLabel value="#{cat.punishtopic}"/>
+                            </p:column>
+
+                            <p:column headerText="Detail">
+                                <p:outputLabel value="#{cat.punishDetail}"/>
+                            </p:column>
+
+                            <p:column headerText="Action Taken">
+                                <p:outputLabel value="#{cat.action}"/>
+                            </p:column>
+
+                        </p:dataTable>
+
+
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Print" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
+                                <p:printer target="grid" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:panel>
+                </p:panel>
+
+
+            </p:panelGrid>
+        </h:form>
+    </h:body>
+</html>

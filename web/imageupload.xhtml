@@ -1,0 +1,130 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+        <style>
+            .Bimage .ui-layout-unit-content{
+
+                //background-color: purple;
+                background-image: url("resources/images/background.png");
+                // background-size: contain;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+
+            .ui-panelgrid td, .ui-panelgrid tr{
+                border-style: none !important
+            }
+
+
+            .Banner .ui-layout-unit-content{
+
+                //background-color: purple;
+                background-image: url("resources/images/ndf1.gif");
+                background-size: contain;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+        </style>
+
+    </h:head>
+    <h:body>
+        <h:form  id="form" enctype="multipart/form-data">  
+
+            <p:growl id="messages"/> 
+
+            <p:spacer height="20"></p:spacer>
+
+            <p:dialog id="dialog1" header="Confirmation" widgetVar="confirm" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="1" cellpadding="5" id="grida1" style="text-align: center;">
+                    <p:outputLabel value="Are you Sure"/>
+                    <p:separator />
+                    <f:facet name="footer" id="foot">
+                        <p:commandButton value="Yes" action="#{loginBeans.logout}" update="grida1" process="grida1" icon="ui-icon-check"/>
+                        <p:spacer width="25"/>
+                        <p:commandButton value="No"  icon="ui-icon-close" onclick="PF('confirm').hide();"/>
+                    </f:facet>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:dialog header="Image Change" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" style="margin:0 auto;">
+
+                <h:panelGrid columns="1" cellpadding="5" id="carDetail" style="text-align:center;">
+
+                    <p:outputLabel value="Select Image: *" />
+                    <p:fileUpload value="#{uploadImagee.file}" mode="simple" sizeLimit="9000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                  required="true" requiredMessage="Image missing" multiple="true"/>
+                    <f:facet name="footer">
+                        <p:commandButton value="Change" ajax="false"  update=":form:image" process="@this"
+                                         actionListener="#{uploadImagee.upload}" icon="ui-icon-arrowrefresh-1-w" oncomplete="handleLoginRequest(xhr, status, args)"
+                                         onerror="carDialog.show()">
+                            <f:param name="id" value="#{imageBean.table.imageID}"/>
+                        </p:commandButton>
+
+                    </f:facet>   
+                </h:panelGrid>
+            </p:dialog>
+
+
+            <p:layout fullPage="true">
+                <p:layoutUnit id="left" position="west"  size="225" style="border: 0px; padding: 0px;" styleClass="Bimage"/>
+
+                <p:layoutUnit id="right" position="east" size="225" resizable="false" style="border: none; padding: 0px" styleClass="Bimage"/>
+
+                <p:layoutUnit id="center" position="center" style="padding-top: 10px; border: none">
+                    <p:layout>
+                        <p:layoutUnit position="north" size="100" style="padding: 0px;" styleClass="Banner"/>
+
+                        <p:layoutUnit id="in_center" position="center" style="padding-top: 0px; padding-left: 0px; padding-right: 0px; text-align: center; border: none;">
+                            <p:toolbar style="padding-right: 0px;">
+                                <f:facet name="right">
+                                    <p:outputLabel value="Cover Image"/> 
+                                    <p:spacer width="250" height="20"/>
+                                    <p:splitButton  value="Menu">
+                                        <p:menuitem value="Home Page"  icon="ui-icon-extlink" outcome="adminPanel"/>
+                                        <p:separator />
+                                        <p:menuitem value="Add User"  icon="ui-icon-document" outcome="addUser"/>
+                                        <p:menuitem value="Manage User"  icon="ui-icon-pencil" outcome="manageUser"/>
+                                        <p:menuitem value="User Log"  icon="ui-icon-folder-open" outcome="userLog"/>
+                                        <p:menuitem value="Change Image" icon="ui-icon-arrowrefresh-1-w" outcome="imageupload"/>
+                                        <p:menuitem value="Student Info" icon="ui-icon-search" outcome="Individual"/>
+                                        <p:separator />
+                                        <p:menuitem value="Logout" icon="ui-icon-close" onclick="PF('confirm').show();"/>
+                                    </p:splitButton>
+                                </f:facet>
+                            </p:toolbar>
+                            <p:dataGrid var="image" value="#{imageBean.allImage}" columns="3"
+                                        id="image" style=" margin:0 auto;">
+                                <p:spacer height="25"/>
+                                <f:facet name="footer">
+                                    Click on image to change it
+                                </f:facet>
+
+                                <p:panel style="text-align:center;">
+                                    <h:panelGrid columns="1" style="width:100%">
+                                        <p:commandLink update=":form:carDetail" oncomplete="PF('carDialog').show()">
+                                            <h:graphicImage value="displayImage?Image_id=#{image.imageID}" width="200" height="150"/>
+                                            <f:setPropertyActionListener value="#{image}" target="#{imageBean.table}"/>
+                                        </p:commandLink>
+
+                                    </h:panelGrid>
+                                </p:panel>
+
+                            </p:dataGrid>
+                        </p:layoutUnit>
+                    </p:layout>
+                </p:layoutUnit>
+            </p:layout>
+
+
+        </h:form> 
+    </h:body>
+</html>
+

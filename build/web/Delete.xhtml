@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Delete Student</title>
+        <style>
+
+            body{
+
+                //background-color: purple;
+                background-image: url("resources/images/background.png");
+                background-size: cover;
+                background-repeat: no-repeat;
+                //     overflow: hidden;
+                padding: 0px;
+            }
+
+            .ui-panelgrid td, .ui-panelgrid tr{
+                border-style: none !important
+            }
+
+            .Banner{
+
+                //background-color: purple;
+                background-image: url("resources/images/ndf1.gif");
+                background-size: cover;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+
+        </style>
+    </h:head>
+    <h:body>
+
+        <h:form id="form">
+
+            <p:dialog id="dialog1" header="Confirmation" widgetVar="confirm" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="1" cellpadding="5" id="grida1" style="text-align: center;">
+                    <p:outputLabel value="Are you Sure"/>
+                    <p:separator />
+                    <f:facet name="footer" id="foot">
+                        <p:commandButton value="Yes" action="#{loginBeans.logout}" update="grida1" process="grida1" icon="ui-icon-check"/>
+                        <p:spacer width="25"/>
+                        <p:commandButton value="No"  icon="ui-icon-close" onclick="PF('confirm').hide();"/>
+                    </f:facet>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:dialog id="dialog" header="Change Password" widgetVar="pass" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="2" cellpadding="5" id="grida">
+
+                    <p:growl id="msgs" life="3000"/>
+                    <h:outputLabel value="" />
+
+                    <p:outputLabel value="UserName:"/>
+                    <p:inputText value="#{loginBeans.userName}" disabled="true"/>
+
+
+                    <p:outputLabel for="password" value="Password:" />
+                    <p:password id="password" value="#{loginBeans.oddPass}"/>
+
+                    <p:outputLabel for="pass1" value="New Password:" />
+                    <p:password id="pass1" value="#{loginBeans.newPass}"/>
+
+
+                    <p:outputLabel for="pass2" value="New Password:" />
+                    <p:password id="pass2" value="#{loginBeans.confirmPass}"/>
+
+
+                    <f:facet name="footer" id="foo">
+                        <p:commandButton value="Change" update="grida" process="grida" actionListener="#{loginBeans.change}" icon="ui-icon-arrowrefresh-1-w"
+                                         oncomplete="handleLoginRequest(xhr, status, args)" onerror="pass.show()" style="float: right;"/>
+                    </f:facet>
+
+                </h:panelGrid>
+            </p:dialog>
+
+
+            <p:panelGrid columns="1" style="width: 900px; margin: 0 auto;">
+
+                <p:panel styleClass="Banner" style=" height:100px;">
+
+                </p:panel>
+
+                <p:menubar styleClass="MenuBar">
+                    <p:menuitem value="Home" outcome="userPanel" icon="ui-icon-extlink"/>
+                    <p:submenu label="Student Details" icon="ui-icon-pencil">
+                        <p:menuitem value="Add Student" outcome="StudentForm" />
+                        <p:menuitem value="View Student" outcome="ViewInformation"/>
+                        <p:menuitem value="Update Semester" outcome="CurrentStudent"/>
+                        <p:menuitem value="Punishment" outcome="Remarks"/>
+                        <p:menuitem value="Delete Student" outcome="Delete"/>
+
+                    </p:submenu>
+                    <p:submenu label="Attendance" icon="ui-icon-folder-open">
+                        <p:menuitem value="Daily Attendance" outcome="Attendance" />
+                        <p:menuitem value="View Attendance" outcome="ViewAttendance" />
+                    </p:submenu>
+                    <p:submenu label="Marksheet" icon="ui-icon-document">
+                        <p:menuitem value="Add Marks" outcome="marksForm" />
+                        <p:menuitem value="View Marks" outcome="viewMarks" />
+                    </p:submenu>
+                    <p:menuitem value="View Details" outcome="IndividualRecords" icon="ui-icon-search"/>
+                    <p:submenu label="#{loginBeans.name}">
+                        <p:menuitem value="Change Password" icon="ui-icon-arrowrefresh-1-w" onclick="PF('pass').show();" title="Change Password"/>
+                        <p:menuitem value="Logout" icon="ui-icon-close" onclick="PF('confirm').show();"/>
+                    </p:submenu>
+                </p:menubar>
+
+                <p:panel header="Delete Student" style="text-align: center; padding: 0px; height: 460px;">
+                    <h:panelGrid columns="2">
+
+                        <h:panelGrid columns="3" cellpadding="10" id="grid" style="text-align: left;">
+                            <p:growl id="message" showDetail="false" for="growl"/>
+                            <p:spacer/>
+                            <p:spacer/>
+
+                            <p:outputLabel value="Reg no: "/>
+                            <p:inputText value="#{droppedBean.regno}" required="true" id="no" requiredMessage="Studenet Id Missing">
+                                <p:ajax update="grid" event="change" listener="#{droppedBean.semester}"/>
+                            </p:inputText>
+                            <p:message for="no" style="color:red"/> 
+
+                            <p:outputLabel value="Dropped Date: "/>
+                            <p:calendar value="#{droppedBean.dateAd}" id="date" pattern="yyyy-MM-dd"  required="true" requiredMessage="Please Enter Date " />
+                            <p:message for="date" style="color:red"/> 
+
+                            <p:outputLabel value="Dropped Semester: "/>
+                            <p:inputText value="#{droppedBean.sem}" id="sem" required="true" requiredMessage="Please enter Semester "/>
+                            <p:message for="sem" style="color:red"/> 
+
+                            <p:outputLabel value="Reason: "/>
+                            <p:inputTextarea value="#{droppedBean.reason}" style="width: 195px;" id="reason" required="true" requiredMessage="Please Enter reason"/>
+                            <p:message for="reason" style="color:red"/> 
+
+                            <f:facet name="footer">
+                                <p:commandButton action="#{droppedBean.insert}" value="Drop" update="grid" icon="ui-icon-close" style="float: right; right: 14px;"/>
+                            </f:facet>
+                        </h:panelGrid>
+                        <p:panel style="border: none;">
+                            <p:graphicImage value="resources/images/del.png" style="padding-left: 50px; padding-top: 30px;" width="300" height="300"/>
+                        </p:panel>
+
+                    </h:panelGrid>
+
+                </p:panel>
+            </p:panelGrid>
+
+        </h:form>
+
+    </h:body>
+</html>
+

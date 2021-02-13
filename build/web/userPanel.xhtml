@@ -1,0 +1,236 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title></title>
+
+        <script type="text/javascript">
+            function handleLoginRequest(xhr, status, args) {
+                if (args.validationFailed || !args.ok) {
+                    PF('pass').jq.effect("shake", {times: 5}, 1000);
+                }
+                else {
+                    PF('pass').hide();
+                    $('#loginLink').fadeOut();
+                }
+            }
+
+        </script>
+
+        <style>
+
+            .Bimage .ui-layout-unit-content{
+
+                //background-color: purple;
+                background-image: url("resources/images/background.png");
+                // background-size: contain;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+
+            .ui-panelgrid td, .ui-panelgrid tr{
+                border-style: none !important
+            }
+
+            .MenuBar.ui-menubar {
+                // text-align: center;
+                position: relative;
+            }
+
+            .MenuBar .ui-menu-list {
+                display: inline-block; 
+                // white-space: 10px;
+            }
+
+
+            .ui-menubar .ui-menuitem {
+
+                clear:none;
+                //  margin-right:10px;
+                padding-right: 3px;
+                padding-left: 3px;
+                padding-top: 0px;
+                padding-bottom: 0px;
+                // display: block;
+                width: auto;
+            } 
+
+            .Banner .ui-layout-unit-content{
+
+                //background-color: purple;
+                background-image: url("resources/images/ndf1.gif");
+                background-size: cover;
+                background-repeat: no-repeat;
+                overflow: hidden;
+            }
+
+
+        </style>
+    </h:head>
+    <h:body>
+
+        <h:form id="form" enctype="multipart/form-data">
+
+            <p:dialog id="dialog1" header="Confirmation" widgetVar="confirm" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="1" cellpadding="5" id="grida1" style="text-align: center;">
+                    <p:outputLabel value="Are you Sure"/>
+                    <p:separator />
+                    <f:facet name="footer" id="foot">
+                        <p:commandButton value="Yes" action="#{loginBeans.logout}" update="grida1" process="grida1" icon="ui-icon-check"/>
+                        <p:spacer width="25"/>
+                        <p:commandButton value="No"  icon="ui-icon-close" onclick="PF('confirm').hide();"/>
+                    </f:facet>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:layout fullPage="true">
+
+                <p:layoutUnit id="left" position="west"  size="225" style="border: 0px; padding: 0px;" styleClass="Bimage"/>
+
+                <p:layoutUnit id="right" position="east" size="225" resizable="false"
+                              style="border: none; padding: 0px" styleClass="Bimage"/>
+
+
+                <p:layoutUnit id="center" position="center" style="padding-top: 10px; border: none">
+                    <p:layout>
+                        <p:layoutUnit position="north" size="100" style="padding: 0px;" styleClass="Banner">
+                        </p:layoutUnit>
+                        <p:layoutUnit id="in_center" position="center" style="border:none;">
+                            <p:menubar styleClass="MenuBar">
+                                <p:menuitem value="Home" outcome="userPanel" icon="ui-icon-extlink"/>
+                                <p:submenu label="Student Details" icon="ui-icon-pencil">
+                                    <p:menuitem value="Add Student" outcome="StudentForm" />
+                                    <p:menuitem value="View Student" outcome="ViewInformation"/>
+                                    <p:menuitem value="Update Semester" outcome="CurrentStudent"/>
+                                      <p:menuitem value="Punishment" outcome="Remarks"/>
+                                    <p:menuitem value="Delete Student" outcome="Delete"/>
+
+                                </p:submenu>
+                                <p:submenu label="Attendance" icon="ui-icon-folder-open">
+                                    <p:menuitem value="Daily Attendance" outcome="Attendance" />
+                                    <p:menuitem value="View Attendance" outcome="ViewAttendance" />
+                                </p:submenu>
+                                <p:submenu label="Marksheet" icon="ui-icon-document">
+                                    <p:menuitem value="Add Marks" outcome="marksForm" />
+                                    <p:menuitem value="View Marks" outcome="viewMarks" />
+                                </p:submenu>
+                                <p:menuitem value="View Details" outcome="IndividualRecords" icon="ui-icon-search"/>
+                                <p:submenu label="#{loginBeans.name}">
+                                    <p:menuitem value="Change Password" icon="ui-icon-arrowrefresh-1-w" onclick="PF('pass').show();" title="Change Password"/>
+                                    <p:menuitem value="Logout" icon="ui-icon-close" onclick="PF('confirm').show();"/>
+                                </p:submenu>
+                            </p:menubar>
+
+                            <p:panel style="padding-left: 0px; padding-right: 0px; height: 455px;">
+                                <p:panelGrid columns="2" style="width: auto; padding: 0px;" id="pan">
+
+                                    <p:panel style="text-align: center; height: 425px; width: 400px; " header="Notices" >
+                                        <h:panelGrid columns="2" cellpadding="10" style="float: left;">
+                                            <p:outputLabel/>
+                                            <p:outputLabel/>
+
+                                            <p:outputLabel for="eventdate" value="Date:" />
+                                            <p:calendar id="eventdate" value="#{NoticeView.eventdate}" pattern="dd-MM-yyyy" mask="true"/>
+
+
+
+                                            <p:outputLabel for="name" value="Description"/>
+                                            <p:inputTextarea  rows="7"  cols="25" id="name" value="#{NoticeView.ename}"/>
+
+
+                                            <f:facet name="footer" >
+                                                <p:commandButton  value="Submit" ajax="false" icon="ui-icon-script" update=":form:pan" actionListener="#{NoticeView.click}" style="float: right;"/>
+
+                                            </f:facet>
+                                        </h:panelGrid>
+
+                                    </p:panel>
+
+                                    <p:panel style="height: 425px; width: 400px; text-align: center;" header="Routine">
+
+                                        <h:panelGrid columns="2" cellpadding="10" id="routine">
+                                            <p:growl id="growl" life="5000"/>
+                                            <p:outputLabel/>
+
+                                            <p:outputLabel value="Program: "/>
+                                            <p:selectOneMenu value="#{uploadroutine.program}" id="program" requiredMessage="Please Enter Program" style="width: 200px">  
+                                                <f:selectItem itemLabel="Program" itemValue="" />
+                                                <f:selectItems value="#{uploadroutine.categoryName}"/> 
+                                                <p:ajax update="semester" event="change" />
+                                            </p:selectOneMenu>
+
+                                            <p:outputLabel value="Semester: "/>
+                                            <p:selectOneMenu value="#{uploadroutine.sem}" id="semester" requiredMessage="Please Enter Program" style="width: 200px">  
+                                                <f:selectItem itemLabel="Semester" itemValue="" />
+                                                <f:selectItems value="#{uploadroutine.semester}"/> 
+                                            </p:selectOneMenu>
+
+                                            <p:outputLabel value="Section: "/>
+                                            <p:selectOneMenu value="#{uploadroutine.section}" id="section" requiredMessage="Please Enter Program" style="width: 200px">  
+                                                <f:selectItem itemLabel="Section" itemValue="" />
+                                                <f:selectItems value="#{uploadroutine.sec}"/> 
+                                            </p:selectOneMenu>
+
+
+                                            <p:outputLabel value="Select Image: *" />
+                                            <p:fileUpload value="#{uploadroutine.file}" mode="simple" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" style="width: 200px"/> 
+                                            <f:facet name="footer">
+                                            <p:commandButton value="Save" ajax="false" icon="ui-icon-disk" 
+                                                             actionListener="#{uploadroutine.upload}" update=":form:routine" style="float: right;"/>
+                                            </f:facet>
+                                        </h:panelGrid>
+
+                                    </p:panel>
+
+                                </p:panelGrid>
+
+                            </p:panel>
+
+                        </p:layoutUnit>
+
+                    </p:layout>
+
+
+                </p:layoutUnit>
+
+            </p:layout>
+
+            <p:dialog id="dialog" header="Change Password" widgetVar="pass" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="2" cellpadding="5" id="grida">
+
+                    <p:growl id="msgs" life="3000"/>
+                    <h:outputLabel value="" />
+
+                    <p:outputLabel value="UserName:"/>
+                    <p:inputText value="#{loginBeans.userName}" disabled="true"/>
+
+
+                    <p:outputLabel for="password" value="Password:" />
+                    <p:password id="password" value="#{loginBeans.oddPass}"/>
+
+                    <p:outputLabel for="pass1" value="New Password:" />
+                    <p:password id="pass1" value="#{loginBeans.newPass}"/>
+
+
+                    <p:outputLabel for="pass2" value="New Password:" />
+                    <p:password id="pass2" value="#{loginBeans.confirmPass}"/>
+
+
+                    <f:facet name="footer" id="foo">
+                        <p:commandButton value="Change" update="grida" process="grida" actionListener="#{loginBeans.change}" icon="ui-icon-arrowrefresh-1-w"
+                                         oncomplete="handleLoginRequest(xhr, status, args)" onerror="pass.show()" style="float: right;"/>
+                    </f:facet>
+
+                </h:panelGrid>
+            </p:dialog>
+
+
+        </h:form>
+
+    </h:body>
+</html>
+

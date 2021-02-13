@@ -1,0 +1,223 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <style>
+
+            body{
+
+                //background-color: purple;
+                background-image: url("resources/images/background.png");
+                background-size: cover;
+                background-repeat: no-repeat;
+                //     overflow: hidden;
+                padding: 0px;
+            }
+
+            .ui-panelgrid td, .ui-panelgrid tr{
+                border-style: none !important
+            }
+
+            .Banner{
+
+                //background-color: purple;
+                background-image: url("resources/images/ndf1.gif");
+                background-size: cover;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="false" life="5000" for="growl"/> 
+
+            <p:dialog id="dialog" header="Change Password" widgetVar="pass" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="2" cellpadding="5" id="grida">
+
+                    <p:growl id="msgs" life="3000"/>
+                    <h:outputLabel value="" />
+
+                    <p:outputLabel value="UserName:"/>
+                    <p:inputText value="#{loginBeans.userName}" disabled="true"/>
+
+
+                    <p:outputLabel for="password" value="Password:" />
+                    <p:password id="password" value="#{loginBeans.oddPass}"/>
+
+                    <p:outputLabel for="pass1" value="New Password:" />
+                    <p:password id="pass1" value="#{loginBeans.newPass}"/>
+
+
+                    <p:outputLabel for="pass2" value="New Password:" />
+                    <p:password id="pass2" value="#{loginBeans.confirmPass}"/>
+
+
+                    <f:facet name="footer" id="foo">
+                        <p:commandButton value="Change" update="grida" process="grida" actionListener="#{loginBeans.change}" icon="ui-icon-arrowrefresh-1-w"
+                                         onerror="pass.show()" oncomplete="PF('pass').hide();" style="float: right;"/>
+                    </f:facet>
+
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:panelGrid columns="1" style="width: 900px; margin: 0 auto;">
+                <p:panel styleClass="Banner" style=" height:100px;">
+
+                </p:panel>
+
+                <p:menubar styleClass="MenuBar">
+                    <p:menuitem value="Home" outcome="userPanel" icon="ui-icon-extlink"/>
+                    <p:submenu label="Student Details" icon="ui-icon-pencil">
+                        <p:menuitem value="Add Student" outcome="StudentForm" />
+                        <p:menuitem value="View Student" outcome="ViewInformation"/>
+                        <p:menuitem value="Update Semester" outcome="CurrentStudent"/>
+                        <p:menuitem value="Punishment" outcome="Remarks"/>
+                        <p:menuitem value="Delete Student" outcome="Delete"/>
+
+                    </p:submenu>
+                    <p:submenu label="Attendance" icon="ui-icon-folder-open">
+                        <p:menuitem value="Daily Attendance" outcome="Attendance" />
+                        <p:menuitem value="View Attendance" outcome="ViewAttendance" />
+                    </p:submenu>
+                    <p:submenu label="Marksheet" icon="ui-icon-document">
+                        <p:menuitem value="Add Marks" outcome="marksForm" />
+                        <p:menuitem value="View Marks" outcome="viewMarks" />
+                    </p:submenu>
+                    <p:menuitem value="View Details" outcome="IndividualRecords" icon="ui-icon-search"/>
+                    <p:submenu label="#{loginBeans.name}">
+                        <p:menuitem value="Change Password" icon="ui-icon-arrowrefresh-1-w" onclick="PF('pass').show();" title="Change Password"/>
+                        <p:menuitem value="Logout" icon="ui-icon-close" onclick="PF('confirm').show();"/>
+                    </p:submenu>
+                </p:menubar>
+
+                <h:panelGrid columns="2" id="grid"> 
+                    <p:outputLabel value="Search By:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/>
+                    <h:selectOneRadio  id="show" value="#{getStudentData.radioStatus}" required="true">
+                        <f:selectItem itemLabel="Batch&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" itemValue="batch"/>
+                        <f:selectItem itemLabel="Reg No." itemValue="regno"/>
+                        <f:ajax render="group"/>
+                        <p:ajax process="@this" event="change" update=":form:grid"  
+                                partialSubmit="true" />
+                    </h:selectOneRadio>
+                    <p:outputLabel/>
+
+                </h:panelGrid> 
+
+                <h:panelGroup id="group">
+                    <h:panelGrid  columns="2" cellpadding="5" rendered="#{getStudentData.radioStatus=='batch'}" id="batch1" >
+                        <p:outputLabel value="Program: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />  
+                        <p:selectOneMenu  value="#{getStudentData.program}" id="program" style="width: 200px;">  
+                            <f:selectItem itemLabel="Select Program" itemValue="" />
+                            <f:selectItems value="#{getStudentData.categoryName}"/> 
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Batch: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
+                        <p:inputText value="#{getStudentData.batch}" id="batch"/>
+                        <f:facet name="footer">
+                            <p:commandButton  value="Show" ajax="false" update=":form:student" process="=@this" icon="ui-icon-script" style="float: right;">
+                            </p:commandButton>
+                        </f:facet>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2" cellpadding="5" rendered="#{getStudentData.radioStatus=='regno'}" id="regno1">
+
+                        <p:outputLabel value="Registration No: " />
+                        <p:inputText value="#{getStudentData.ID}">
+                            <p:ajax update="program,batch" resetValues="true" event="click" listener="#{getStudentData.focus}"/>
+                        </p:inputText>
+                        <f:facet name="footer">
+                            <p:commandButton  value="Show" ajax="false" update=":form:student" process="=@this" icon="ui-icon-script" style="float: right;">
+                            </p:commandButton>
+                        </f:facet>
+                    </h:panelGrid>
+                </h:panelGroup>
+
+
+
+                <p:dataGrid var="student" value="#{getStudentData.allImage1}" columns="3" layout="grid" widgetVar="studentDetail"
+                            rows="12" paginator="true" id="student"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            rowsPerPageTemplate="6,12,16">
+
+                    <f:facet name="header">
+                        Student Information
+                    </f:facet>
+
+                    <p:panel style="text-align:left">
+                        <h:panelGrid columns="2" style="width:100%">
+                            <f:facet name="header">
+
+                                <h:graphicImage value="DisplayImage?id=#{student.ID}" width="150" height="150"></h:graphicImage>
+                            </f:facet>
+
+                            <p:outputLabel value="Registration No: "/>
+                            <p:outputLabel value="#{student.ID}" />
+                            <p:outputLabel value="Full Name: " />
+                            <p:outputLabel value="#{student.fullName}" />
+                            <p:outputLabel value="Join Year: " />
+                            <p:outputLabel value="#{student.year}" />
+                            <p:outputLabel value="Batch:" />
+                            <p:outputLabel value="#{student.batch}" />
+                            <p:outputLabel value="Mobile No: " />
+                            <p:outputLabel value="#{student.mobno}" />
+
+                            <f:facet name="footer">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <h:commandLink action="#{getStudentData.information}" target="_blank" value="View Full Information" style="font-weight: bold; color: #D20005;">
+                                    <f:setPropertyActionListener value="#{student}" target="#{getStudentData.table}"/>
+                                </h:commandLink>
+                            </f:facet>
+                        </h:panelGrid>
+                    </p:panel>
+
+                </p:dataGrid>
+
+            </p:panelGrid>
+
+
+            <p:dialog header="Student Information" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="carDetail" style="margin: 0 auto;">
+                    <p:panelGrid  columns="2" rendered="#{not empty getStudentData.table}" columnClasses="label,value">
+                        <f:facet name="header">
+                            <h:outputLink value="DisplayImage?id=#{getStudentData.table.ID}" target="_blank" >
+                                <h:graphicImage value="DisplayImage?id=#{getStudentData.table.ID}" width="50" height="50"></h:graphicImage>
+                            </h:outputLink>   
+                        </f:facet>
+
+                        <h:outputText value="Id:" />
+                        <h:outputText value="#{getStudentData.table.ID}" />
+
+                        <h:outputText value="Name" />
+                        <h:outputText value="#{getStudentData.table.fullName}" />
+
+                        <h:outputText value="batch:" />
+                        <h:outputText value="#{getStudentData.table.batch}" />
+
+                        <h:outputText value="Year:" />
+                        <h:outputText value="#{getStudentData.table.year}" />
+                    </p:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+            <p:dialog id="dialog1" header="Confirmation" widgetVar="confirm" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="1" cellpadding="5" id="grida1" style="text-align: center;">
+                    <p:outputLabel value="Are you Sure"/>
+                    <p:separator />
+                    <f:facet name="footer" id="foot">
+                        <p:commandButton value="Yes" action="#{loginBeans.logout}" update="grida1" process="grida1" icon="ui-icon-check"/>
+                        <p:spacer width="25"/>
+                        <p:commandButton value="No"  icon="ui-icon-close" onclick="PF('confirm').hide();"/>
+                    </f:facet>
+                </h:panelGrid>
+            </p:dialog>
+
+        </h:form>
+    </h:body>
+</html>
+

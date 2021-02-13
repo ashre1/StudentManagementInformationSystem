@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+    <h:head>
+        <title>Image Upload</title>
+
+        <style>
+
+            body{
+
+                //background-color: purple;
+                background-image: url("resources/images/background.png");
+                background-size: cover;
+                background-repeat: no-repeat;
+                //     overflow: hidden;
+                padding: 0px;
+            }
+
+            .ui-panelgrid td, .ui-panelgrid tr{
+                border-style: none !important
+            }
+
+            .Banner{
+
+                //background-color: purple;
+                background-image: url("resources/images/ndf1.gif");
+                background-size: cover;
+                background-repeat: no-repeat;
+                overflow: hidden;
+                padding: 0px;
+            }
+
+        </style>
+    </h:head>
+    <h:body>
+        <h:form enctype="multipart/form-data" id="form"> 
+            <p:growl id="growl" showDetail="true" sticky="true" for="growl" life="5000"/>  
+
+            <p:dialog id="dialog1" header="Confirmation" widgetVar="confirm" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="1" cellpadding="5" id="grida1" style="text-align: center;">
+                    <p:outputLabel value="Are you Sure"/>
+                    <p:separator />
+                    <f:facet name="footer" id="foot">
+                        <p:commandButton value="Yes" action="#{loginBeans.logout}" update="grida1" process="grida1" icon="ui-icon-check"/>
+                        <p:spacer width="25"/>
+                        <p:commandButton value="No"  icon="ui-icon-close" onclick="PF('confirm').hide();"/>
+                    </f:facet>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:dialog id="dialog" header="Change Password" widgetVar="pass" resizable="false" draggable="false" style="margin:0 auto;" showEffect="explode" hideEffect="fade" modal="true">
+                <h:panelGrid columns="2" cellpadding="5" id="grida">
+
+                    <p:growl id="msgs" life="3000"/>
+                    <h:outputLabel value="" />
+
+                    <p:outputLabel value="UserName:"/>
+                    <p:inputText value="#{loginBeans.userName}" disabled="true"/>
+
+
+                    <p:outputLabel for="password" value="Password:" />
+                    <p:password id="password" value="#{loginBeans.oddPass}"/>
+
+                    <p:outputLabel for="pass1" value="New Password:" />
+                    <p:password id="pass1" value="#{loginBeans.newPass}"/>
+
+
+                    <p:outputLabel for="pass2" value="New Password:" />
+                    <p:password id="pass2" value="#{loginBeans.confirmPass}"/>
+
+
+                    <f:facet name="footer" id="foo">
+                        <p:commandButton value="Change" update="grida" process="grida" actionListener="#{loginBeans.change}" icon="ui-icon-arrowrefresh-1-w"
+                                         oncomplete="handleLoginRequest(xhr, status, args)" onerror="pass.show()" style="float: right;"/>
+                    </f:facet>
+
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:dialog header="Student Image" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" style="margin:0 auto;">
+
+                <h:panelGrid columns="1" cellpadding="5" id="carDetail" style="text-align:center;">
+                    <p:growl id="msgs2" life="3000"/>
+                    <p:outputLabel value="Student Image: *" />
+                    <p:fileUpload value="#{uploadStdData.file}" mode="simple" sizeLimit="9000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                  required="true" requiredMessage="Image missing" multiple="true"/>
+                    <f:facet name="footer">
+                        <p:commandButton value="Upload" ajax="false"
+                                         actionListener="#{uploadStdData.upload}" update="carDetail,status" icon="ui-icon-disk" oncomplete="handleLoginRequest(xhr, status, args)"
+                                         onerror="carDialog.show()">
+                        </p:commandButton>
+
+                    </f:facet>   
+                </h:panelGrid>
+            </p:dialog>
+
+
+
+            <p:panelGrid columns="1" style="width: 900px; margin: 0 auto;">
+                <p:panel styleClass="Banner" style=" height:100px;">
+
+                </p:panel>
+
+                <p:menubar styleClass="MenuBar">
+                    <p:menuitem value="Home" outcome="userPanel" icon="ui-icon-extlink"/>
+                    <p:submenu label="Student Details" icon="ui-icon-pencil">
+                        <p:menuitem value="Add Student" outcome="StudentForm" />
+                        <p:menuitem value="View Student" outcome="ViewInformation"/>
+                        <p:menuitem value="Update Semester" outcome="CurrentStudent"/>
+                        <p:menuitem value="Punishment" outcome="Remarks"/>
+                        <p:menuitem value="Delete Student" outcome="Delete"/>
+
+                    </p:submenu>
+                    <p:submenu label="Attendance" icon="ui-icon-folder-open">
+                        <p:menuitem value="Daily Attendance" outcome="Attendance" />
+                        <p:menuitem value="View Attendance" outcome="ViewAttendance" />
+                    </p:submenu>
+                    <p:submenu label="Marksheet" icon="ui-icon-document">
+                        <p:menuitem value="Add Marks" outcome="marksForm" />
+                        <p:menuitem value="View Marks" outcome="viewMarks" />
+                    </p:submenu>
+                    <p:menuitem value="View Details" outcome="IndividualRecords" icon="ui-icon-search"/>
+                    <p:submenu label="#{loginBeans.name}">
+                        <p:menuitem value="Change Password" icon="ui-icon-arrowrefresh-1-w" onclick="PF('pass').show();" title="Change Password"/>
+                        <p:menuitem value="Logout" icon="ui-icon-close" onclick="PF('confirm').show();"/>
+                    </p:submenu>
+                </p:menubar>
+
+                <p:wizard id="wi" widgetVar="wiz" flowListener="#{uploadStdData.onFlowProcess}">
+                    <p:tab id="personal" title="Personal">
+                        <p:panel header="A.Personal Details">
+                            <h:panelGrid columns="3" cellpadding="5" id="grid">
+                                <p:growl id="msg" life="3000" for="msg"/> 
+                                <p:outputLabel/>
+                                <p:outputLabel/>
+                                <p:outputLabel value="Program: * "/>  
+                                <p:selectOneMenu value="#{uploadStdData.program}" id="program" required="true" requiredMessage="Please Enter Program" style="width: 200px;">  
+                                    <f:selectItem itemLabel="Select Program" itemValue="" />
+                                    <f:selectItems value="#{uploadStdData.categoryName}"/> 
+                                    <p:ajax update="regno" listener="#{uploadStdData.num}"/>
+                                </p:selectOneMenu>
+                                <p:message for="program" style="color:red"/> 
+
+
+                                <p:outputLabel  value="Registration No.: *"/>
+                                <p:inputText  id="regno"  label="regno" value="#{uploadStdData.id}" required="true" requiredMessage="Please Enter Registration Number">
+                                    <p:ajax update="grid" event="change" listener="#{uploadStdData.ok}"/>
+                                </p:inputText>
+                                <p:message for="regno" style="color:red"/> 
+
+                                <p:outputLabel  value="Batch: *"/>
+                                <p:inputText id="Batch" value="#{uploadStdData.batch}" required="true" requiredMessage="Please Enter the batch"/>  
+                                <p:message for="Batch" style="color:red"/>
+
+                                <p:outputLabel  value="Year: *"/>
+                                <p:inputText  value="#{uploadStdData.year}" id="year" required="true" requiredMessage="Please Enter the year"/> 
+                                <p:message for="year" style="color:red"/>
+
+                                <p:outputLabel  value="Section:"/>
+                                <p:inputText id="section" value="#{uploadStdData.section}" />   
+                                <p:spacer/>
+
+
+                                <p:outputLabel  value="1.Name:"/>
+                                <p:outputLabel />
+                                <p:outputLabel />
+
+
+                                <p:outputLabel for="firstName" value="First Name:"/>
+                                <p:inputText value="#{uploadStdData.name}" id="firstName" required="true" requiredMessage="Please Enter First Name"/>
+                                <p:message for="firstName" style="color:red"/>
+
+                                <p:outputLabel value="Middle Name:"/>
+                                <p:inputText id="middlename" value="#{uploadStdData.middleName}"/>
+                                <p:message for="middlename" style="color:red"/>
+
+                                <p:outputLabel for="lastname" value="Last Name:"/>
+                                <p:inputText id="lastname" value="#{uploadStdData.lastName}" required="true" requiredMessage="Please Enter Last Name"/>
+                                <p:message for="lastname" style="color:red"/>
+
+                                <p:outputLabel   value="2.Gender: *"/>  
+                                <h:selectOneRadio id="gender" value="#{uploadStdData.gender}"  required="true" requiredMessage="Please Select a Gender "> 
+                                    <f:selectItem itemValue="male" itemLabel="Male" />
+                                    <f:selectItem itemValue="female" itemLabel="Female" />
+                                </h:selectOneRadio>
+                                <p:message for="gender" style="color:red"/>
+
+                                <p:outputLabel value="3.Date of Birth in A.D: *"/>
+                                <p:calendar id="mask" value="#{uploadStdData.dateAd}" pattern="yyyy-MM-dd"  required="true" requiredMessage="Please Enter DOB " />
+                                <p:message for="mask" style="color:red"/>
+
+                                <p:outputLabel for="nationality" value="4.Nationality:"/>
+                                <p:inputText id="nationality" value="#{uploadStdData.nationality}"  required="true" requiredMessage="Please Enter Nationality"/>
+                                <p:message for="nationality" style="color:red"/>
+
+                                <p:outputLabel  value="5.Religion:"/>
+                                <p:inputText id="religion" value="#{uploadStdData.religion}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="6.Citizenship No:"/>
+                                <p:inputText id="citizen_no"  value="#{uploadStdData.citizenshipNo}" />              
+                                <p:message for="citizen_no" style="color:red"/>
+
+                                <p:outputLabel  value="7.Mobile No:"/>
+                                <p:inputText id="mob_no"  value="#{uploadStdData.mobileNO}"/>
+                                <p:message for="mob_no" style="color:red"/>
+
+
+                                <p:outputLabel  value="8.Email:"/>
+                                <p:inputText id="email"  value="#{uploadStdData.email}"/> 
+                                <p:message for="email" style="color:red"/>
+
+                                <p:commandButton value="Upload Image" oncomplete="PF('carDialog').show()" icon="ui-icon-document"/>
+                                <p:outputLabel value="#{uploadStdData.status}" id="status"/>
+
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:tab>
+
+                    <p:tab id="address" title="Address">
+                        <p:panel header="Address Details">
+
+                            <h:panelGrid columns="3" cellpadding="5">
+                                <p:outputLabel value="10.Permanent address"/>
+                                <h:outputLabel />
+                                <h:outputLabel/>
+
+                                <p:outputLabel  value="a.House No."/>
+                                <p:inputText id="house_no" value="#{uploadStdData.house_no}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="b.Street*"/>
+                                <p:inputText id="street"   required="true" requiredMessage="Please Enter Street" value="#{uploadStdData.street}"/>
+                                <p:message for="street" style="color:red"/>
+
+                                <p:outputLabel  value="c.VDC/Municipality.*"/>
+                                <p:inputText id="vdc"  required="true" requiredMessage="Please Enter VDC/Municipality" value="#{uploadStdData.vdc}"/>
+                                <p:message for="vdc" style="color:red"/>
+
+                                <p:outputLabel  value="d.Ward No.*"/>
+                                <p:inputText id="wardno"  required="true" requiredMessage="Please Enter Ward No" value="#{uploadStdData.wardno}"/>
+                                <p:message for="wardno" style="color:red"/>
+
+                                <p:outputLabel  value="e.District.*"/>
+                                <p:inputText id="district" required="true" requiredMessage="Please Enter District " value="#{uploadStdData.district}"/>
+                                <p:message for="district" style="color:red"/>
+
+                                <p:outputLabel  value="f.Phone No."/>
+                                <p:inputText id="phone_no" value="#{uploadStdData.phone_no}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel value="11.Temporary address "/>  
+                                <h:outputLabel />
+                                <h:outputLabel/>
+
+                                <p:outputLabel  value="a.House No."/>
+                                <p:inputText id="t_house_no"  value="#{uploadStdData.t_house_no}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="b.Street*"/>
+                                <p:inputText id="t_street"  required="true" requiredMessage="Please Enter Street" value="#{uploadStdData.t_street}"/>
+                                <p:message for="t_street" style="color:red"/>
+
+                                <p:outputLabel  value="c.VDC/Municipality.*"/>
+                                <p:inputText id="t_vdc" required="true" requiredMessage="Please Enter VDC/Municipality" value="#{uploadStdData.t_vdc}"/>
+                                <p:message for="t_vdc" style="color:red"/>
+
+                                <p:outputLabel  value="d.Ward No.*"/>
+                                <p:inputText id="t_wardno"  required="true" requiredMessage="Please Enter Ward No" value="#{uploadStdData.t_wardno}"/>
+                                <p:message for="t_wardno" style="color:red"/>
+
+                                <p:outputLabel  value="e.District.*"/>
+                                <p:inputText id="t_district" required="true" requiredMessage="Please Enter District " value="#{uploadStdData.t_district}"/>
+                                <p:message for="t_district" style="color:red"/>
+
+                                <p:outputLabel  value="f.Phone No."/>
+                                <p:inputText id="t_phone_no" value="#{uploadStdData.t_phone_no}"/>
+                                <h:outputLabel/>
+
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:tab>
+
+                    <p:tab id="family" title="Family">
+                        <p:panel header="Family Details" >
+
+                            <h:panelGrid columns="3" cellpadding="5">
+
+                                <p:outputLabel value="12.Father's Details:"/>  
+                                <h:outputLabel />
+                                <h:outputLabel/>
+
+                                <p:outputLabel  value="a.Name*"/>
+                                <p:inputText id="f_name" required="true" requiredMessage="Please Enter Father's Name" value="#{uploadStdData.f_name}"/>         
+                                <p:message for="f_name" style="color:red"/>
+
+                                <p:outputLabel  value="b.Occupation*"/>
+                                <p:inputText id="f_occupation"  required="true" requiredMessage="Please Enter Father's Occupation" value="#{uploadStdData.f_occupation}"/>
+                                <p:message for="f_occupation" style="color:red"/>
+
+                                <p:outputLabel  value="c.Address*"/>
+                                <p:inputText id="f_address"  required="true" requiredMessage="Please Enter Father's Address" value="#{uploadStdData.f_address}"/>              
+                                <p:message for="f_address" style="color:red"/>
+
+                                <p:outputLabel  value="d.Phone No."/>
+                                <p:inputText id="f_phone_no" value="#{uploadStdData.f_phone_no}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="e.Mobile No."/>
+                                <p:inputText id="f_mobil_no" value="#{uploadStdData.f_mobilno}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel value="13.Guardian's Details:"/>  
+                                <h:outputLabel />
+                                <h:outputLabel/>
+
+                                <p:outputLabel  value="a.Name*"/>
+                                <p:inputText id="g_name" required="true" requiredMessage="Please Enter Guardian's name" value="#{uploadStdData.g_name}"/>         
+                                <p:message for="g_name" style="color:red"/>
+
+                                <p:outputLabel  value="b.Occupation*"/>
+                                <p:inputText id="g_occupation"  required="true" requiredMessage="Please Enter Occupation" value="#{uploadStdData.g_occupation}"/>
+                                <p:message for="g_occupation" style="color:red"/>
+
+                                <p:outputLabel  value="c.Address*"/>
+                                <p:inputText id="g_address"  required="true" requiredMessage="Please Enter Address" value="#{uploadStdData.g_address}"/>              
+                                <p:message for="g_address" style="color:red"/>
+
+                                <p:outputLabel  value="d.Phone No."/>
+                                <p:inputText id="g_phone_no" value="#{uploadStdData.g_phone_no}" />
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="e.Mobile No."/>
+                                <p:inputText id="g_mobil_no" value="#{uploadStdData.g_mobilno}"/>
+                                <p:outputLabel/>
+
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:tab>
+
+                    <p:tab id="education" title="Education">
+                        <p:panel header="Education Details">
+                            <h:panelGrid columns="3" cellpadding="5">
+
+                                <p:outputLabel value="B.Educational Details:"/>  
+                                <h:outputLabel/>
+                                <h:outputLabel/>
+
+                                <p:outputLabel value="1.Details of SLC or equivalent Exam:"/>  
+                                <h:outputLabel/>
+                                <h:outputLabel/>
+
+                                <p:outputLabel  value="a.Board*"/>
+                                <p:inputText id="s_board" required="true" requiredMessage="Please Enter SLC Board" value="#{uploadStdData.slcBoard}"/>         
+                                <p:message for="s_board" style="color:red"/>
+
+                                <p:outputLabel  value="b.School"/>
+                                <p:inputText id="s_school" value="#{uploadStdData.slcSchool}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="c.Passed Year in A.D"/>
+                                <p:inputText id="s_pass_year" value="#{uploadStdData.slcPassedYear}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="d.Passed Year in B.S*"/>
+                                <p:inputText id="s_pass_yearnepali"  required="true" requiredMessage="Please Enter passed year B.S" value="#{uploadStdData.slcPassedYearnep}"/>   
+                                <p:message for="s_pass_yearnepali" style="color:red"/>
+
+                                <p:outputLabel  value="e.Passed Division*"/>
+                                <p:inputText id="s_pass_division" required="true" requiredMessage="Please Enter Division" value="#{uploadStdData.slcDivision}"/>
+                                <p:message for="s_pass_division" style="color:red"/>
+
+                                <p:outputLabel  value="f.Symbol No."/>
+                                <p:inputText id="s_symbol_no" value="#{uploadStdData.slcSymbol}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="g.Percentage*"/>
+                                <p:inputText id="s_percentage"  required="true" requiredMessage="Please Enter Percentage" value="#{uploadStdData.slcPercentage}"/>
+                                <p:message for="s_percentage" style="color:red"/>
+
+                                <p:outputLabel  value="h.Grade:"/>
+                                <p:inputText id="grade" value="#{uploadStdData.slcGrade}"/>         
+                                <p:message for="grade" style="color:red"/>
+
+
+                                <p:outputLabel  value="i.Major Subjects."/>
+                                <p:inputText id="s_major_subjects" value="#{uploadStdData.slcMajorSubject}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel value="2.Details of PCL/+2 or eqivalent Exam:"/>  
+                                <h:outputLabel/>
+                                <h:outputLabel/>
+
+                                <p:outputLabel  value="a.Board*"/>
+                                <p:inputText id="h_board" required="true" requiredMessage="Please Enter Board" value="#{uploadStdData.plus2Board}"/>         
+                                <p:message for="h_board" style="color:red"/>
+
+                                <p:outputLabel  value="b.PCL/+2/Others"/>
+                                <p:inputText id="h_choice" value="#{uploadStdData.plus2Others}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="c.School/College*"/>
+                                <p:inputText id="h_college"  required="true" requiredMessage="Please Enter +2 school/college" value="#{uploadStdData.plus2School}"/>              
+                                <p:message for="h_college" style="color:red"/>
+
+                                <p:outputLabel  value="d.Passed Year in A.D"/>
+                                <p:inputText id="h_pass_year" value="#{uploadStdData.plus2PassedYear}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="e.Passed Year in B.S*"/>
+                                <p:inputText id="h_pass_yearnepali"  required="true" requiredMessage="Please Enter +2 passed year B.S" value="#{uploadStdData.plus2PassedYearnep}"/> 
+                                <p:message for="h_pass_yearnepali" style="color:red"/>
+
+                                <p:outputLabel  value="f.Passed Division*"/>
+                                <p:inputText id="h_pass_division" required="true" requiredMessage="Please Enter +2 division" value="#{uploadStdData.plus2Division}"/>
+                                <p:message for="h_pass_division" style="color:red"/>
+
+                                <p:outputLabel  value="g.TU/HSEB/Other Registration No.*"/>
+                                <p:inputText id="h_registration_no" required="true" requiredMessage="Please Enter TU/HSEB/Other Registration No." value="#{uploadStdData.plus2Symbol}"/>         
+                                <p:message for="h_registration_no" style="color:red"/>
+
+                                <p:outputLabel  value="h.Percentage*"/>
+                                <p:inputText id="h_percentage"  required="true" requiredMessage="Please Enter +2percentage" value="#{uploadStdData.plus2Percentage}"/>
+                                <p:message for="h_percentage" style="color:red"/>
+
+                                <p:outputLabel  value="i.Major Subjects."/>
+                                <p:inputText id="h_major_subjects" value="#{uploadStdData.plus2MajorSubject}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel value="3.Number Scored in CMAT Exam:"/>
+                                <h:outputLabel/>
+                                <h:outputLabel/>
+
+                                <p:outputLabel  value="a.CMAT Roll No."/>
+                                <p:inputText id="c_roll_no" value="#{uploadStdData.cmatSymbol}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="b.CMAT Score"/>
+                                <p:inputText id="c_score" value="#{uploadStdData.cmatMarks}"/>
+                                <p:outputLabel/>
+
+
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:tab>
+
+                    <p:tab id="document" title="Document">
+                        <p:panel header="Documents submitted" style="height: 480px;">
+
+                            <h:panelGrid columns="3" cellpadding="7">
+
+                                <p:outputLabel  value="Documents submitted" style="font: bold;"/>
+                                <h:outputLabel />
+                                <h:outputLabel/>
+
+                                <p:outputLabel  value="SLC Transcript"/>
+                                <p:inputText id="slc_transcript" value="#{uploadStdData.slcTranscript}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="SLC Charater Certificate"/>
+                                <p:inputText id="slc_character_certificate" value="#{uploadStdData.slcCertificate}" />
+                                <p:outputLabel/>
+
+                                <p:outputLabel  value="+2 Transcript"/>
+                                <p:inputText id="plus2_transcript" value="#{uploadStdData.plus2Transcript}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel value="+2 Character Certificate"/>
+                                <p:inputText id="plus2_character_certificate" value="#{uploadStdData.plus2Certificate}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel value="Citizenship Photocopy"/>
+                                <p:inputText id="citizenship_photocopy" value="#{uploadStdData.citizenship}"/>
+                                <p:outputLabel/>
+
+                                <p:outputLabel value="Photo"/>
+                                <p:inputText id="photo" value="#{uploadStdData.photo}" required="true"/>
+                                <p:outputLabel/>
+
+                            </h:panelGrid>
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Save"
+                                                 actionListener="#{uploadStdData.save}" update="form" process="@this" icon="ui-icon-disk" style="float: right;"
+                                                 oncomplete="PF('wiz').loadStep('personal', false)" />
+                            </f:facet>
+
+                        </p:panel>
+
+                    </p:tab>
+                </p:wizard>
+            </p:panelGrid>
+        </h:form> 
+    </h:body>
+</html>
